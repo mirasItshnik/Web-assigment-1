@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Book a museum excursion or send your feedback to the Saken Seifullin Museum administration. Author: Team Museum Project.">
+  <title>Visit & Feedback - Saken Seifullin Museum</title>
+</head>
+<body>
+  <header>
+    <h1>Plan Your Visit & Leave Feedback</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="biography.html">Biography</a></li>
+        <li><a href="exhibitions.html">Exhibitions</a></li>
+        <li><a href="exhibits.html">Collection</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="feedback.html">Visit & Feedback</a></li>
+        <li><a href="contacts.html">Contacts</a></li>
+        <li><a href="colophon.html">Colophon</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Book a Guided Excursion</h2>
+      <form action="#" method="get">
+        <fieldset>
+          <legend>Excursion Booking Form</legend>
+
+          <p>
+            <label for="visitor-name">Full Name:</label><br>
+            <input type="text" id="visitor-name" name="visitor-name" placeholder="John Doe" required>
+          </p>
+
+          <p>
+            <label for="visitor-email">Email Address:</label><br>
+            <input type="email" id="visitor-email" name="visitor-email" placeholder="example@domain.com" required>
+          </p>
+
+          <p>
+            <label for="visit-date">Preferred Date:</label><br>
+            <input type="date" id="visit-date" name="visit-date" required>
+          </p>
+
+          <p>
+            <label for="tour-language">Guided Tour Language:</label><br>
+            <select id="tour-language" name="tour-language">
+              <option value="en">English</option>
+              <option value="kk">Kazakh</option>
+              <option value="ru">Russian</option>
+            </select>
+          </p>
+
+          <p>Visitor Category:<br>
+            <input type="radio" id="cat-student" name="category" value="student">
+            <label for="cat-student">Student</label><br>
+            <input type="radio" id="cat-adult" name="category" value="adult" checked>
+            <label for="cat-adult">Adult</label><br>
+            <input type="radio" id="cat-senior" name="category" value="senior">
+            <label for="cat-senior">Senior</label>
+          </p>
+
+          <p>
+            <input type="checkbox" id="newsletter" name="newsletter" value="yes">
+            <label for="newsletter">Subscribe to museum monthly updates</label>
+          </p>
+
+          <p>
+            <label for="special-requests">Special Requests / Questions:</label><br>
+            <textarea id="special-requests" name="special-requests" rows="4" cols="40" placeholder="Specify group size or accessibility needs..."></textarea>
+          </p>
+
+          <button type="submit">Submit Request</button>
+        </fieldset>
+      </form>
+    </section>
+
+    <section>
+      <h2>Visitor Feedback</h2>
+      <form action="#" method="get">
+        <fieldset>
+          <legend>Rate Your Experience</legend>
+          <p>
+            <label for="feedback-text">Your Feedback:</label><br>
+            <textarea id="feedback-text" name="feedback-text" rows="4" cols="40" required></textarea>
+          </p>
+          <button type="submit">Send Review</button>
+        </fieldset>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Saken Seifullin Museum. All rights reserved. <a href="colophon.html">Colophon</a></p>
+  </footer>
+</body>
+</html>
