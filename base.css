@@ -1,0 +1,41 @@
+nav ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav a {
+    text-decoration: none;
+}
+
+header {
+    background-color: #02b24e;
+    padding: 20px;
+}
+.exhibit-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 30px 20px;
+}
+.exhibit-card {
+    padding: 10px;
+    border: 1px solid #dddddd;
+    box-sizing: border-box;
+}
+
+.exhibit-grid img {
+    max-width: 100%;
+}
+
+.aisha-exhibit {
+width: 195.2px;
+height: 293px;
+}
+.ayan-exhibit {
+    width: 263px;
+height: 283.31px;
+}

@@ -3,78 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Explore ongoing and permanent exhibitions at the Saken Seifullin Museum in Astana. Author: Team Museum Project.">
   <title>Exhibitions - Saken Seifullin Museum</title>
-  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <header>
-        <h1>
-    <img src="logo museum.jpg" alt="Museum logo">
-    THE STATE MUSEUM <br>
-    <small>named after S. Seifullin</small>
-</h1>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="biography.html">Biography</a></li>
-        <li><a href="exhibitions.html">Exhibitions</a></li>
-        <li><a href="exhibits.html">Collection</a></li>
-        <li><a href="gallery.html">Gallery</a></li>
-        <li><a href="feedback.html">Visit & Feedback</a></li>
-        <li><a href="contacts.html">Contacts</a></li>
-        <li><a href="Museum history.html">Museum history</a></li>
-      </ul>
-    </nav>
+<body id="page-exhibitions">
+
+  <header class="site-header">
+    <div class="header-nav-container">
+      <div class="logo-group">
+        <svg class="logo-icon" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <div class="logo-text">
+          <h1>The State Museum</h1>
+          <span>named after S. Seifullin</span>
+        </div>
+      </div>
+      <nav class="main-nav">
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="biography.html">Biography</a></li>
+          <li><a href="exhibitions.html" class="active">Exhibitions</a></li>
+          <li><a href="exhibits.html">Collection</a></li>
+          <li><a href="gallery.html">Gallery</a></li>
+          <li><a href="feedback.html">Visit & Feedback</a></li>
+          <li><a href="contacts.html">Contacts</a></li>
+          <li><a href="colophon.html">Colophon</a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <section>
-      <h2>Permanent Halls</h2>
-      <p>The museum consists of six thematic halls representing different eras of Seifullin's life:</p>
-      <ul>
-        <li><strong>Hall 1:</strong> Childhood and Youth in the Steppe</li>
-        <li><strong>Hall 2:</strong> Educational Years in Omsk</li>
-        <li><strong>Hall 3:</strong> Pedagogical and Public Activities</li>
-        <li><strong>Hall 4:</strong> Literary Masterpieces and Publications</li>
-        <li><strong>Hall 5:</strong> Personal Belongings and Office Re-creation</li>
-        <li><strong>Hall 6:</strong> Memory and Contemporary Heritage</li>
-      </ul>
-    </section>
+  <section class="hero-banner">
+    <div class="hero-content">
+      <h1 class="hero-title">Exhibitions & Halls</h1>
+      <p class="hero-subtitle">Discover our 6 permanent halls and seasonal cultural events.</p>
+      <div class="gold-divider"></div>
+    </div>
+  </section>
 
-    <article>
-      <h2>Temporary Exhibition: <q>Seifullin and Music</q></h2>
-      <p>This special display highlights Seifullin's passion for music, featuring traditional musical instruments and original sheet music notes transcribed by the author himself.</p>
-      <p>Dates: <time datetime="2026-09-01">September 1, 2026</time> &ndash; <time datetime="2026-12-01">December 1, 2026</time>.</p>
-      <figure>
-        <img src="Data/PresetImageFill2-26.jpg" alt="Exhibition hall displaying traditional musical instruments and manuscripts">
-        <figcaption>Hall displaying rare musical notes and heritage items.</figcaption>
-      </figure>
-    </article>
+  <main class="container">
+    <h2 class="section-title">Permanent Exhibition Halls</h2>
+    <div class="content-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+      
+      <div class="highlight-card">
+        <div class="highlight-content">
+          <h3>Hall 01: Childhood</h3>
+          <p>Exhibits related to Seifullin's early life and family origins.</p>
+        </div>
+      </div>
+
+      <div class="highlight-card">
+        <div class="highlight-content">
+          <h3>Hall 02: Literary Legacy</h3>
+          <p>Original manuscripts, first editions, and historical typewriter.</p>
+        </div>
+      </div>
+
+      <div class="highlight-card">
+        <div class="highlight-content">
+          <h3>Hall 03: Personal Office</h3>
+          <p>Reconstructed writing desk, belongings, and traditional dombra.</p>
+        </div>
+      </div>
+
+    </div>
   </main>
-<footer>
-    <p>&copy; 2026 Saken Seifullin Museum. All rights reserved. This site is created for educational purposes. <a href="colophon.html">Learn how this site was made</a>.</p>
-    <footer>
-    <address>
-        <p>
-            <strong>Администрация</strong><br>
-            &#9742;
-            <a href="tel:+77172998042">+7 (7172) 99-80-42</a>
-        </p>
 
-        <p>
-            <strong>Музей</strong><br>
-            &#9742;
-            <a href="tel:+77172986103">+7 (7172) 98-61-03</a>
-        </p>
+  <footer class="site-footer">
+    <div class="footer-bottom">
+      <p>&copy; 2026 Saken Seifullin Museum.</p>
+    </div>
+  </footer>
 
-        <p>
-            <strong>Адрес</strong><br>
-            ул. Мухтара Ауэзова, 20
-        </p>
-    </address>
-
-    <p>&copy; 2026 Saken Seifullin Museum. All rights reserved.</p>
-</footer>
+  <script>
+    console.log("Exhibitions page loaded.");
+  </script>
 </body>
 </html>
