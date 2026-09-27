@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Open+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --primary-dark: #0f3832;
+  --accent-gold: #c8a251;
+  --accent-gold-hover: #b08d3e;
+  --bg-light: #f4f6f4;
+  --card-bg: #ffffff;
+  --card-border: #e2e8e5;
+  --text-dark: #22332d;
+  --text-muted: #556660;
+  --white: #ffffff;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+/* Override Bootstrap Brand Styles */
+.bg-brand, 
+.site-header {
+  background-color: var(--primary-dark) !important;
+}
+
+.text-gold {
+  color: var(--accent-gold) !important;
+}
+
+/* Font styles */
+h1, h2, h3, h4, .font-serif {
+  font-family: 'Merriweather', serif;
+}
+
+/* Hero Banner */
+.hero-banner {
+  background-color: var(--primary-dark);
+  color: var(--white);
+  padding: 3.5rem 0;
+  position: relative;
+}
+
+.gold-divider {
+  width: 60px;
+  height: 3px;
+  background-color: var(--accent-gold);
+}
+
+/* Timeline Components */
+.timeline {
+  border-left: 3px solid var(--accent-gold);
+  padding-left: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.timeline-year {
+  font-family: 'Merriweather', serif;
+  font-weight: 700;
+  color: var(--accent-gold);
+  font-size: 1.1rem;
+}
+
+/* ==========================================================================
+   HOVER EFFECTS FOR CARDS AND IMAGES (Index, Biography, Exhibitions)
+   ========================================================================== */
+
+/* 1. Карточки: плавный подъем и ограничение вылета фото */
+.card,
+.info-card,
+.image-card,
+.figure {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden !important;
+  border-color: var(--card-border);
+}
+
+.card:hover,
+.info-card:hover,
+.image-card:hover,
+.figure:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.75rem 1.5rem rgba(15, 56, 50, 0.12) !important;
+}
+
+/* 2. Фотографии: плавное увеличение (зум) при наведении */
+.card-img-top,
+.card-img,
+.featured-img,
+.figure-img,
+.card img {
+  transition: transform 0.35s ease;
+}
+
+.card:hover .card-img-top,
+.card:hover .card-img,
+.card:hover img,
+.figure:hover .figure-img,
+.info-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Footer Styling */
+.site-footer {
+  background-color: var(--primary-dark);
+  color: var(--white);
+}

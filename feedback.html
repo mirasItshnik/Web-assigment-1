@@ -4,98 +4,196 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Book a museum excursion or send your feedback to the Saken Seifullin Museum administration. Author: Team Museum Project.">
-  <title>Visit & Feedback - Saken Seifullin Museum</title>
+  <!-- Bootstrap 5.3.3 CSS CDN (Version: 5.3.3) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="css/base.css">
+  <title>Visit & Feedback - Saken Seifullin Museum</title>
+  <style>
+    /* Стили для звёздного рейтинга */
+    .star-rating {
+      display: inline-flex;
+      flex-direction: row-reverse;
+      font-size: 1.5rem;
+    }
+    .star-rating input { display: none; }
+    .star-rating label {
+      color: #ccc;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .star-rating input:checked ~ label,
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+      color: #ffc107;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Plan Your Visit & Leave Feedback</h1>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="biography.html">Biography</a></li>
-        <li><a href="exhibitions.html">Exhibitions</a></li>
-        <li><a href="exhibits.html">Collection</a></li>
-        <li><a href="gallery.html">Gallery</a></li>
-        <li><a href="feedback.html">Visit & Feedback</a></li>
-        <li><a href="contacts.html">Contacts</a></li>
-        <li><a href="Museum history.html">Museum history</a></li>
-      </ul>
+
+  <header class="bg-brand text-white shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-brand py-3">
+      <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center gap-3 text-wrap" href="index.html">
+          <img src="logo museum.jpg" alt="Museum logo" class="rounded" style="width: 50px; height: auto;">
+          <span>
+            <strong class="d-block h5 mb-0">THE STATE MUSEUM</strong>
+            <small class="fs-6 text-warning">named after S. Seifullin</small>
+          </span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav gap-2 text-center text-lg-start">
+            <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="biography.html">Biography</a></li>
+            <li class="nav-item"><a class="nav-link" href="exhibitions.html">Exhibitions</a></li>
+            <li class="nav-item"><a class="nav-link" href="exhibits.html">Collection</a></li>
+            <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+            <li class="nav-item"><a class="nav-link active" href="feedback.html">Visit & Feedback</a></li>
+            <li class="nav-item"><a class="nav-link" href="contacts.html">Contacts</a></li>
+            <li class="nav-item"><a class="nav-link" href="Museum history.html">Museum history</a></li>
+            <li class="nav-item"><a class="nav-link" href="poetry.html">Poetry Wall</a></li>
+          </ul>
+        </div>
+      </div>
     </nav>
   </header>
 
-  <main>
-    <section>
-      <h2>Book a Guided Excursion</h2>
-      <form action="#" method="get">
-        <fieldset>
-          <legend>Excursion Booking Form</legend>
+  <main class="container my-5">
+    <div class="row g-5">
+      
+      <!-- Left Column: Booking Form -->
+      <section class="col-12 col-lg-7">
+        <div class="p-4 border rounded shadow-sm bg-white">
+          <h2 class="h3 fw-bold mb-4 text-success">Book a Guided Excursion</h2>
+          
+          <form action="#" method="get">
+            <div class="mb-3">
+              <label for="visitor-name" class="form-label fw-semibold">Full Name:</label>
+              <input type="text" class="form-control" id="visitor-name" name="visitor-name" placeholder="John Doe" required>
+            </div>
 
-          <p>
-            <label for="visitor-name">Full Name:</label><br>
-            <input type="text" id="visitor-name" name="visitor-name" placeholder="John Doe" required>
-          </p>
+            <div class="mb-3">
+              <label for="visitor-email" class="form-label fw-semibold">Email Address:</label>
+              <input type="email" class="form-control" id="visitor-email" name="visitor-email" placeholder="example@domain.com" required>
+            </div>
 
-          <p>
-            <label for="visitor-email">Email Address:</label><br>
-            <input type="email" id="visitor-email" name="visitor-email" placeholder="example@domain.com" required>
-          </p>
+            <div class="mb-3">
+              <label for="visit-date" class="form-label fw-semibold">Preferred Date:</label>
+              <input type="date" class="form-control" id="visit-date" name="visit-date" required>
+            </div>
 
-          <p>
-            <label for="visit-date">Preferred Date:</label><br>
-            <input type="date" id="visit-date" name="visit-date" required>
-          </p>
+            <div class="mb-3">
+              <label for="tour-language" class="form-label fw-semibold">Guided Tour Language:</label>
+              <select class="form-select" id="tour-language" name="tour-language">
+                <option value="en">English</option>
+                <option value="kk">Kazakh</option>
+                <option value="ru">Russian</option>
+              </select>
+            </div>
 
-          <p>
-            <label for="tour-language">Guided Tour Language:</label><br>
-            <select id="tour-language" name="tour-language">
-              <option value="en">English</option>
-              <option value="kk">Kazakh</option>
-              <option value="ru">Russian</option>
-            </select>
-          </p>
+            <div class="mb-3">
+              <label class="form-label fw-semibold d-block">Visitor Category:</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="cat-student" name="category" value="student">
+                <label class="form-check-label" for="cat-student">Student</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="cat-adult" name="category" value="adult" checked>
+                <label class="form-check-label" for="cat-adult">Adult</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="cat-senior" name="category" value="senior">
+                <label class="form-check-label" for="cat-senior">Senior</label>
+              </div>
+            </div>
 
-          <p>Visitor Category:<br>
-            <input type="radio" id="cat-student" name="category" value="student">
-            <label for="cat-student">Student</label><br>
-            <input type="radio" id="cat-adult" name="category" value="adult" checked>
-            <label for="cat-adult">Adult</label><br>
-            <input type="radio" id="cat-senior" name="category" value="senior">
-            <label for="cat-senior">Senior</label>
-          </p>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="newsletter" name="newsletter" value="yes">
+              <label class="form-check-label" for="newsletter">Subscribe to museum monthly updates</label>
+            </div>
 
-          <p>
-            <input type="checkbox" id="newsletter" name="newsletter" value="yes">
-            <label for="newsletter">Subscribe to museum monthly updates</label>
-          </p>
+            <div class="mb-4">
+              <label for="special-requests" class="form-label fw-semibold">Special Requests / Questions:</label>
+              <textarea class="form-control" id="special-requests" name="special-requests" rows="3" placeholder="Specify group size or accessibility needs..."></textarea>
+            </div>
 
-          <p>
-            <label for="special-requests">Special Requests / Questions:</label><br>
-            <textarea id="special-requests" name="special-requests" rows="4" cols="40" placeholder="Specify group size or accessibility needs..."></textarea>
-          </p>
+            <div class="d-flex gap-2 flex-wrap">
+              <!-- BUTTON VARIANT 1: Large Primary Button -->
+              <button type="submit" class="btn btn-success btn-lg">Submit Request</button>
+              
+              <!-- BUTTON VARIANT 2: Outline Variant -->
+              <button type="reset" class="btn btn-outline-secondary">Reset Form</button>
+            </div>
+          </form>
+        </div>
+      </section>
 
-          <button type="submit">Submit Request</button>
-        </fieldset>
-      </form>
-    </section>
+      <!-- Right Column: Feedback & Status -->
+      <section class="col-12 col-lg-5">
+        <div class="p-4 border rounded shadow-sm bg-white mb-4">
+          <h2 class="h3 fw-bold mb-4 text-success">Visitor Feedback</h2>
+          <form action="#" method="get">
+            <!-- Rate Museum (Звёздный рейтинг) -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold d-block mb-1">Rate Your Visit:</label>
+              <div class="star-rating">
+                <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 stars">★</label>
+                <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 stars">★</label>
+                <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 stars">★</label>
+                <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 stars">★</label>
+                <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 star">★</label>
+              </div>
+            </div>
 
-    <section>
-      <h2>Visitor Feedback</h2>
-      <form action="#" method="get">
-        <fieldset>
-          <legend>Rate Your Experience</legend>
-          <p>
-            <label for="feedback-text">Your Feedback:</label><br>
-            <textarea id="feedback-text" name="feedback-text" rows="4" cols="40" required></textarea>
-          </p>
-          <button type="submit">Send Review</button>
-        </fieldset>
-      </form>
-    </section>
+            <div class="mb-3">
+              <label for="feedback-text" class="form-label fw-semibold">Your Feedback:</label>
+              <textarea class="form-control" id="feedback-text" name="feedback-text" rows="4" required></textarea>
+            </div>
+            
+            <!-- BUTTON VARIANT 3: Small Outline Button -->
+            <button type="submit" class="btn btn-outline-success btn-sm">Send Review</button>
+          </form>
+        </div>
+
+        <div class="p-4 border rounded bg-light">
+          <h3 class="h5 fw-bold mb-2">Group Booking Status</h3>
+          <p class="small text-muted mb-3">Group bookings for weekends are currently full.</p>
+
+          <!-- BUTTON VARIANT 4: Disabled State -->
+          <button type="button" class="btn btn-secondary disabled" aria-disabled="true">Weekend Slots Closed</button>
+        </div>
+      </section>
+
+    </div>
   </main>
 
-  <footer>
-    <p>&copy; 2026 Saken Seifullin Museum. All rights reserved. <a href="colophon.html">Colophon</a></p>
+  <footer class="bg-brand text-white pt-4 pb-3 mt-auto">
+    <div class="container">
+      <div class="row gy-3">
+        <div class="col-12 col-md-4">
+          <strong class="d-block mb-1">Администрация</strong>
+          <a href="tel:+77172998042" class="text-white text-decoration-none">☎ +7 (7172) 99-80-42</a>
+        </div>
+        <div class="col-12 col-md-4">
+          <strong class="d-block mb-1">Музей</strong>
+          <a href="tel:+77172986103" class="text-white text-decoration-none">☎ +7 (7172) 98-61-03</a>
+        </div>
+        <div class="col-12 col-md-4">
+          <strong class="d-block mb-1">Адрес</strong>
+          <p class="mb-0">ул. Мухтара Ауэзова, 20</p>
+        </div>
+      </div>
+      <hr class="border-light my-3">
+      <div class="text-center text-muted small">
+        <p class="mb-0 text-white">&copy; 2026 Saken Seifullin Museum. All rights reserved. <a href="colophon.html" class="text-warning">Colophon</a></p>
+      </div>
+    </div>
   </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

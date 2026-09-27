@@ -1,41 +1,57 @@
-nav ul {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 25px;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+/* ==========================================================================
+   ASSIGNMENT 3: BOOTSTRAP CORRECTION LAYER
+   --------------------------------------------------------------------------
+   REMOVED OLD CSS RULES REPLACED BY BOOTSTRAP:
+   1. Removed custom `nav ul` flex layout -> Replaced by Bootstrap `.navbar-nav`
+   2. Removed custom `header` layout & colors -> Replaced by `.bg-dark`, `.navbar`
+   3. Removed `.exhibit-grid` hand-made CSS Grid -> Replaced by Bootstrap `.row` & `.col-*`
+   4. Removed custom `main > section` CSS Grid -> Replaced by Bootstrap Grid
+   5. Removed custom button/padding/margin styles -> Replaced by `.btn`, `.p-*`, `.m-*`
+   6. Removed figure & img fixed sizes/hover scaling -> Replaced by `.img-fluid` & `.card-img-top`
+   ========================================================================== */
+
+:root {
+  --brand-green: #0A372F;
+  --brand-gold: #C9A646;
+  --brand-light-bg: #EEF3F0;
 }
 
-nav a {
-    text-decoration: none;
+body {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-header {
-    background-color: #02b24e;
-    padding: 20px;
-}
-.exhibit-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 30px 20px;
-}
-.exhibit-card {
-    padding: 10px;
-    border: 1px solid #dddddd;
-    box-sizing: border-box;
+main {
+  flex: 1 0 auto;
 }
 
-.exhibit-grid img {
-    max-width: 100%;
+/* Brand Overrides */
+.bg-brand {
+  background-color: var(--brand-green) !important;
 }
 
-.aisha-exhibit {
-width: 195.2px;
-height: 293px;
+h1, h2, h3, .navbar-brand {
+  font-family: Georgia, "Times New Roman", serif;
 }
-.ayan-exhibit {
-    width: 263px;
-height: 283.31px;
+
+/* Quote Box in Gallery */
+.poetry-quote-box {
+  background-color: var(--brand-light-bg);
+  border-left: 4px solid var(--brand-gold);
+}
+
+/* Custom Hover Effects */
+.card-img-top, .figure-img {
+  transition: transform 0.3s ease;
+}
+
+.card:hover .card-img-top,
+.figure:hover .figure-img {
+  transform: scale(1.03);
+}
+
+.card, .figure {
+  overflow: hidden;
 }

@@ -4,53 +4,160 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Photo gallery showcasing historical photos, museum halls, and architectural details. Author: Team Museum Project.">
-  <title>Gallery - Saken Seifullin Museum</title>
+  <!-- Bootstrap 5.3.3 CSS CDN (Version: 5.3.3) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="css/base.css">
+  <title>Gallery - Saken Seifullin Museum</title>
 </head>
 <body>
-  <header>
-    <h1>Photo Gallery</h1>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="biography.html">Biography</a></li>
-        <li><a href="exhibitions.html">Exhibitions</a></li>
-        <li><a href="exhibits.html">Collection</a></li>
-        <li><a href="gallery.html">Gallery</a></li>
-        <li><a href="feedback.html">Visit & Feedback</a></li>
-        <li><a href="contacts.html">Contacts</a></li>
-        <li><a href="Museum history.html">Museum history</a></li>
-      </ul>
+
+  <header class="bg-brand text-white shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-brand py-3">
+      <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center gap-3 text-wrap" href="index.html">
+          <img src="logo museum.jpg" alt="Museum logo" class="rounded" style="width: 50px; height: auto;">
+          <span>
+            <strong class="d-block h5 mb-0">THE STATE MUSEUM</strong>
+            <small class="fs-6 text-warning">named after S. Seifullin</small>
+          </span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav gap-2 text-center text-lg-start">
+            <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="biography.html">Biography</a></li>
+            <li class="nav-item"><a class="nav-link" href="exhibitions.html">Exhibitions</a></li>
+            <li class="nav-item"><a class="nav-link" href="exhibits.html">Collection</a></li>
+            <li class="nav-item"><a class="nav-link active" href="gallery.html">Gallery</a></li>
+            <li class="nav-item"><a class="nav-link" href="feedback.html">Visit & Feedback</a></li>
+            <li class="nav-item"><a class="nav-link" href="contacts.html">Contacts</a></li>
+            <li class="nav-item"><a class="nav-link" href="Museum history.html">Museum history</a></li>
+            <li class="nav-item"><a class="nav-link" href="poetry.html">Poetry Wall</a></li>
+          </ul>
+        </div>
+      </div>
     </nav>
   </header>
 
-  <main>
+  <main class="container my-5">
     <section>
-      <h2>Visual Tour of the Museum</h2>
-      <p>Explore these high-resolution images highlighting our exterior architecture, inner rooms, and archived manuscripts.</p>
+      <h2 class="display-6 fw-bold border-bottom pb-2 text-center text-md-start">Visual Tour of the Museum</h2>
+      <p class="lead text-muted text-center text-md-start mb-4">Explore high-resolution images highlighting our exterior architecture, inner rooms, and archived manuscripts.</p>
 
-      <figure>
-        <img src="Museum inner view.jpeg" alt="Interior view of the Saken Seifullin Museum" width = "600" height = "600">
-        <figcaption><strong>Interior view of the museum</strong></figcaption>
-      </figure>
+      <!-- BOOTSTRAP COMPONENT 1: Interactive Carousel (Slider) -->
+      <!-- Added Carousel component for dynamic interactive view -->
+      <div id="museumCarousel" class="carousel slide shadow-lg rounded overflow-hidden mb-5" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#museumCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#museumCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#museumCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img src="Museum inner view.jpeg" class="d-block w-100 object-fit-cover" style="height: 450px;" alt="Interior view of the Saken Seifullin Museum">
+            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+              <h5>Interior View of the Museum</h5>
+              <p>Traditional wooden furniture reflecting the era of Saken Seifullin.</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="Personal belongings.jpg" class="d-block w-100 object-fit-cover" style="height: 450px;" alt="Personal belongings">
+            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+              <h5>Personal Belongings Showcase</h5>
+              <p>Historical everyday objects, clock, and rare personal items.</p>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img src="Saken s suit.png" class="d-block w-100 object-fit-cover" style="height: 450px;" alt="Saken's suit">
+            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded p-2">
+              <h5>Historical Clothing Artifact</h5>
+              <p>Saken Seifullin's authentic suit preserved in a glass showcase.</p>
+            </div>
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#museumCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#museumCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
 
-      <figure>
-        <img src= "Personal belongings.jpg" alt ="Personal belongings displayed in a museum exhibition case" width = "600" height = "600">
-        <figcaption><strong>Personal belongings of Saken Seifullin displayed in a showcase.</strong></figcaption>
-      </figure>
+      <!-- Photo Cards Section -->
+      <div class="row g-4 align-items-stretch mb-4">
+        <div class="col-12 col-md-4">
+          <div class="card h-100 shadow-sm border-0 position-relative">
+            <span class="position-absolute top-0 start-0 badge bg-dark m-2 p-2 opacity-75">Interior</span>
+            <img src="Museum inner view.jpeg" class="card-img-top object-fit-cover" style="height: 250px;" alt="Interior View">
+            <div class="card-body">
+              <h5 class="card-title text-success fs-6">Museum Inner View</h5>
+              <p class="card-text text-muted small">Traditional furniture creating an authentic historical atmosphere.</p>
+            </div>
+          </div>
+        </div>
 
-      <figure>
-        <img src= "Saken s suit.png" alt = "Saken Seifullin's suit" width = "600" height = "600">
-        <figcaption><strong>Saken Seifullin's suit displayed in the museum</strong></figcaption>
-      </figure>
-      <i>The first photo shows the interior of the museum. The room has traditional furniture and wooden elements. The atmosphere makes the museum look like a historical place and helps visitors understand the period connected with Saken Seifullin.
-         The second photo shows personal belongings displayed in a museum showcase. There are different objects, including a clock, dishes and other personal items. These objects are interesting because they show some details of everyday life in the past.
-         The third photo shows a suit displayed in a glass showcase. The suit is presented together with other historical objects. It gives visitors an opportunity to see a personal item connected with the historical period.</i>
+        <div class="col-12 col-md-4">
+          <div class="card h-100 shadow-sm border-0 position-relative">
+            <span class="position-absolute top-0 start-0 badge bg-dark m-2 p-2 opacity-75">Exhibits</span>
+            <img src="Personal belongings.jpg" class="card-img-top object-fit-cover" style="height: 250px;" alt="Personal Belongings">
+            <div class="card-body">
+              <h5 class="card-title text-success fs-6">Personal Belongings</h5>
+              <p class="card-text text-muted small">Clock, dishes, and personal items preserved in showcases.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-4">
+          <div class="card h-100 shadow-sm border-0 position-relative">
+            <span class="position-absolute top-0 start-0 badge bg-dark m-2 p-2 opacity-75">Attire</span>
+            <img src="Saken s suit.png" class="card-img-top object-fit-cover" style="height: 250px;" alt="Saken Suit">
+            <div class="card-body">
+              <h5 class="card-title text-success fs-6">Authentic Suit</h5>
+              <p class="card-text text-muted small">Suit displayed in a showcase reflecting early 20th-century fashion.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quote Box -->
+      <div class="poetry-quote-box p-4 rounded shadow-sm border-start border-4 border-warning">
+        <p class="fst-italic text-secondary mb-0">
+          The collection presented in these halls provides visitors with a unique opportunity to immerse themselves in the atmosphere of the 20th century. Every item, from the personal manuscripts to the preserved furniture, honors the cultural legacy of Saken Seifullin.
+        </p>
+      </div>
+
     </section>
   </main>
 
-  <footer>
-    <p>&copy; 2026 Saken Seifullin Museum. All rights reserved. <a href="colophon.html">Colophon</a></p>
+  <footer class="bg-brand text-white pt-4 pb-3 mt-auto">
+    <div class="container">
+      <div class="row gy-3">
+        <div class="col-12 col-md-4">
+          <strong class="d-block mb-1">Администрация</strong>
+          <a href="tel:+77172998042" class="text-white text-decoration-none">☎ +7 (7172) 99-80-42</a>
+        </div>
+        <div class="col-12 col-md-4">
+          <strong class="d-block mb-1">Музей</strong>
+          <a href="tel:+77172986103" class="text-white text-decoration-none">☎ +7 (7172) 98-61-03</a>
+        </div>
+        <div class="col-12 col-md-4">
+          <strong class="d-block mb-1">Адрес</strong>
+          <p class="mb-0">ул. Мухтара Ауэзова, 20</p>
+        </div>
+      </div>
+      <hr class="border-light my-3">
+      <div class="text-center text-muted small">
+        <p class="mb-0 text-white">&copy; 2026 Saken Seifullin Museum. All rights reserved. <a href="colophon.html" class="text-warning">Colophon</a></p>
+      </div>
+    </div>
   </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

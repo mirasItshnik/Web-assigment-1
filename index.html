@@ -3,81 +3,108 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Welcome to the Saken Seifullin Museum in Astana. Discover the life, literary works, and heritage of the prominent Kazakh writer and statesman. Author: Team Museum Project.">
-  <title>Saken Seifullin Museum - Home Page</title>
-  <link rel="stylesheet" href="css/base.css">
+  <meta name="description" content="Welcome to the State Museum named after S. Seifullin in Astana. Author: Team Museum Project.">
+  <!-- Bootstrap 5.3.3 CSS CDN (Version: 5.3.3) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/style1.css">
+  <title>Home - Saken Seifullin Museum</title>
 </head>
 <body>
-  <header>
-        <h1>
-    <img src="logo museum.jpg" alt="Museum logo">
-    THE STATE MUSEUM <br>
-    <small>named after S. Seifullin</small>
-</h1>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="biography.html">Biography</a></li>
-        <li><a href="exhibitions.html">Exhibitions</a></li>
-        <li><a href="exhibits.html">Collection</a></li>
-        <li><a href="gallery.html">Gallery</a></li>
-        <li><a href="feedback.html">Visit & Feedback</a></li>
-        <li><a href="contacts.html">Contacts</a></li>
-        <li><a href="Museum history.html">Museum history</a></li>
-      </ul>
+
+  <!-- Header & Navigation -->
+  <header class="site-header text-white shadow-sm sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-dark p-0">
+      <div class="container-fluid px-3 px-md-5">
+        <a class="navbar-brand d-flex align-items-center gap-3" href="index.html">
+          <svg class="logo-icon" viewBox="0 0 24 24" style="width: 36px; height: 36px; fill: #ffffff;"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          <div class="logo-text">
+            <h1 class="h6 mb-0 text-white text-uppercase tracking-wider">The State Museum</h1>
+            <small class="text-white-50 fs-7">named after S. Seifullin</small>
+          </div>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="mainNav">
+          <ul class="navbar-nav gap-2 text-center text-lg-start">
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="biography.html">Biography</a></li>
+            <li class="nav-item"><a class="nav-link" href="exhibitions.html">Exhibitions</a></li>
+            <li class="nav-item"><a class="nav-link" href="exhibits.html">Collection</a></li>
+            <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+            <li class="nav-item"><a class="nav-link" href="feedback.html">Visit &amp; Feedback</a></li>
+            <li class="nav-item"><a class="nav-link" href="contacts.html">Contacts</a></li>
+            <li class="nav-item"><a class="nav-link" href="Museum history.html">Museum history</a></li>
+            <li class="nav-item"><a class="nav-link" href="poetry.html">Poetry Wall</a></li>
+          </ul>
+        </div>
+      </div>
     </nav>
   </header>
 
-  <main>
-    <section>
-      <h2>Welcome to the Museum</h2>
-      <p>The <strong>Saken Seifullin Museum</strong> in Astana is dedicated to honoring the life, literary contributions, and political activity of <em>Saken Seifullin</em>, one of the founders of modern Kazakh literature.</p>
-      <p>Located in a historic wooden building from the late 19th century, the museum offers visitors a unique journey through early 20th-century Kazakh history.</p>
-      <figure>
-        <img src="./astana-16-1.jpg" alt="Exterior view of the wooden Saken Seifullin Museum building in Astana">
-        <figcaption>The historical building of the Saken Seifullin Museum.</figcaption>
-      </figure>
-    </section>
+  <!-- Hero Section -->
+  <section class="hero-banner py-5">
+    <div class="container">
+      <h1 class="display-4 text-white mb-2">Saken Seifullin Museum</h1>
+      <p class="lead text-white-50 mb-3" style="max-width: 650px;">Preserving the legacy of a pioneering Kazakh writer, statesman, and public figure in Astana.</p>
+      <div class="gold-divider"></div>
+    </div>
+  </section>
 
-    <article>
-      <h2>News & Updates</h2>
-      <p><mark>Special Event:</mark> Join us this month for an exclusive exhibition featuring rare manuscripts and personal correspondence from Seifullin's early career.</p>
-      <p>Guided tours are available in Kazakh, Russian, and English. Please book in advance on our <a href="feedback.html">Visit page</a>.</p>
-    </article>
+  <!-- Main Content -->
+  <main class="container my-5">
+    <div class="row g-5">
+      
+      <!-- Left Column -->
+      <div class="col-12 col-lg-7">
+        <section class="mb-4">
+          <h2 class="h3 fw-bold text-success mb-3">History of the Museum</h2>
+          <p>The State Museum named after Saken Seifullin was established in 1988 in Astana. The museum was created to preserve the memory of the great Kazakh writer and to introduce his life and work to future generations.</p>
+          <p>Over the years, the museum has become an important cultural and educational center, where visitors can learn about the history of Kazakhstan and national literature.</p>
+        </section>
 
-    <aside>
-      <h3>Quick Museum Facts</h3>
-      <ul>
-        <li>Established: 1988</li>
-        <li>Location: Astana, Kazakhstan</li>
-        <li>Exhibits: Over 5,000 historic items</li>
-      </ul>
-    </aside>
+        <section class="p-4 bg-white rounded border shadow-sm mt-4">
+          <h2 class="h4 fw-bold text-success mb-3">News &amp; Special Events</h2>
+          <p><strong>Special Exhibition:</strong> Join us this month for an exclusive exhibition featuring rare manuscripts and personal correspondence from Seifullin's early career.</p>
+          <p class="mb-0">Guided tours are available in Kazakh, Russian, and English. Please book in advance on our <a href="feedback.html" class="text-success fw-semibold">Visit page</a>.</p>
+        </section>
+      </div>
+
+      <!-- Right Column -->
+      <div class="col-12 col-lg-5">
+        <figure class="figure border rounded p-2 bg-white shadow-sm w-100">
+          <img src="astana-16-1.jpg" class="figure-img img-fluid rounded w-100 object-fit-cover" style="max-height: 300px;" alt="The historical building of the Saken Seifullin Museum">
+          <figcaption class="figure-caption text-center pt-2 fw-semibold">The museum building in Astana</figcaption>
+        </figure>
+
+        <div class="card border shadow-sm p-3 bg-white mt-3">
+          <div class="card-body">
+            <h3 class="h5 fw-bold text-success mb-2">Historical Importance</h3>
+            <p class="card-text text-muted small">The museum is not only a place of memory, but also a symbol of the country's cultural identity. It holds more than 5,000 unique artifacts.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </main>
 
-  <footer>
-    <p>&copy; 2026 Saken Seifullin Museum. All rights reserved. This site is created for educational purposes. <a href="colophon.html">Learn how this site was made</a>.</p>
-    <footer>
-    <address>
-        <p>
-            <strong>Администрация</strong><br>
-             &#9742;
-            <a href="tel:+77172998042">+7 (7172) 99-80-42</a>
-        </p>
+  <!-- Footer -->
+  <footer class="site-footer pt-4 pb-3 mt-auto">
+    <div class="container">
+      <div class="row gy-3 pb-3 border-bottom border-secondary text-center text-md-start">
+        <div class="col-12 col-md-4">📍 20A Auezov Street, Astana</div>
+        <div class="col-12 col-md-4">📞 +7 (7172) 98-61-03</div>
+        <div class="col-12 col-md-4">🕒 Tue - Sun: 09:00 - 18:00</div>
+      </div>
+      <div class="d-flex flex-wrap justify-content-between align-items-center pt-3 small text-white-50">
+        <p class="mb-0">&copy; 2026 The State Museum named after S. Seifullin. All rights reserved.</p>
+        <div><a href="colophon.html" class="text-warning text-decoration-none">Colophon</a> / <a href="contacts.html" class="text-warning text-decoration-none">Contacts</a></div>
+      </div>
+    </div>
+  </footer>
 
-        <p>
-            <strong>Музей</strong><br>
-             &#9742;
-            <a href="tel:+77172986103">+7 (7172) 98-61-03</a>
-        </p>
-
-        <p>
-            <strong>Адрес</strong><br>
-            ул. Мухтара Ауэзова, 20
-        </p>
-    </address>
-
-    <p>&copy; 2026 Saken Seifullin Museum. All rights reserved.</p>
-</footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

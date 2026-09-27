@@ -1,0 +1,85 @@
+/* ==========================================================================
+   maks.css — light correction layer loaded AFTER Bootstrap 5.3.3.
+   Holds only brand colors, fonts and a few small tweaks Bootstrap's
+   utility classes can't express. See removed-css-list.txt for the
+   custom CSS this file replaces.
+   ========================================================================== */
+
+:root {
+  --brand-ink: #1c1a17;
+  --brand-paper: #f3ece0;
+  --brand-gold: #b98c3e;
+  --brand-rust: #8c3b2b;
+  --brand-steppe: #2f4f43;
+}
+
+body {
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--brand-ink);
+}
+
+/* Brand color for the navbar background (no Bootstrap contextual color
+   matches the museum's steppe-green identity) */
+.navbar-brand-museum {
+  background-color: var(--brand-steppe);
+}
+
+/* Dark brand footer band */
+.footer-museum {
+  background-color: var(--brand-ink);
+  color: var(--brand-paper);
+}
+
+/* Steppe-green card/hero background used on the Poetry Wall */
+.bg-steppe {
+  background-color: var(--brand-steppe);
+  color: var(--brand-paper);
+}
+
+/* Rust accent text, used for small headings and captions */
+.text-rust {
+  color: var(--brand-rust);
+}
+
+/* Double-gold rule, reused above/below a couple of sections */
+.accent-border-top {
+  border-top: 3px double var(--brand-gold);
+}
+
+/* Large decorative quote glyph on Poetry Wall cards */
+.quote-mark {
+  font-size: 3rem;
+  line-height: 1;
+  color: var(--brand-gold);
+  opacity: .5;
+}
+
+/* ==========================================================================
+   HOVER EFFECTS FOR CARDS AND IMAGES
+   ========================================================================== */
+
+/* Small hover lift on cards */
+.card,
+.card-lift {
+  transition: transform .2s ease, box-shadow .2s ease;
+  overflow: hidden;
+}
+
+.card:hover,
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Image zoom effect inside cards and figures */
+.card-img-top,
+.figure-img,
+.card img {
+  transition: transform .3s ease;
+}
+
+.card:hover .card-img-top,
+.card:hover img,
+.figure:hover .figure-img {
+  transform: scale(1.04);
+}

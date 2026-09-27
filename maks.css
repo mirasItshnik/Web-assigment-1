@@ -1,0 +1,92 @@
+/* ==========================================================================
+   maks.css — light correction layer loaded AFTER Bootstrap 5.3.3.
+   Holds only brand colors, fonts and a few small tweaks Bootstrap's
+   utility classes can't express.
+   ========================================================================== */
+
+:root {
+  --brand-ink: #1c1a17;
+  --brand-paper: #f3ece0;
+  --brand-gold: #b98c3e;
+  --brand-rust: #8c3b2b;
+  --brand-steppe: #0A372F; /* Темно-зеленый бренд музея */
+}
+
+body {
+  font-family: Georgia, "Times New Roman", serif;
+  color: var(--brand-ink);
+}
+
+/* Brand color for the navbar background */
+.navbar-brand-museum,
+.bg-brand {
+  background-color: var(--brand-steppe) !important;
+}
+
+/* Dark brand footer band */
+.footer-museum {
+  background-color: var(--brand-ink);
+  color: var(--brand-paper);
+}
+
+/* Steppe-green card/hero background used on the Poetry Wall */
+.bg-steppe {
+  background-color: var(--brand-steppe);
+  color: var(--brand-paper);
+}
+
+/* Rust accent text, used for small headings and captions */
+.text-rust {
+  color: var(--brand-rust);
+}
+
+/* Double-gold rule, reused above/below a couple of sections */
+.accent-border-top {
+  border-top: 3px double var(--brand-gold);
+}
+
+/* Large decorative quote glyph on Poetry Wall cards */
+.quote-mark {
+  font-size: 3rem;
+  line-height: 1;
+  color: var(--brand-gold);
+  opacity: .5;
+}
+
+/* Quote Box Styling */
+.poetry-quote-box {
+  background-color: #EEF3F0;
+  border-left: 4px solid var(--brand-gold);
+}
+
+/* ==========================================================================
+   HOVER EFFECTS FOR CARDS AND IMAGES (Contacts, Museum History, Poetry Wall)
+   ========================================================================== */
+
+/* Ограничиваем вылет изображения за пределы карточки */
+.card,
+.card-lift,
+.figure {
+  transition: transform .25s ease, box-shadow .25s ease;
+  overflow: hidden !important;
+}
+
+/* Плавный занос карточки вверх при наведении */
+.card:hover,
+.card-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Эффект зума для изображений внутри карточек и фигур */
+.card-img-top,
+.figure-img,
+.card img {
+  transition: transform .35s ease;
+}
+
+.card:hover .card-img-top,
+.card:hover img,
+.figure:hover .figure-img {
+  transform: scale(1.05);
+}

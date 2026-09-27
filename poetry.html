@@ -3,244 +3,249 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="A wall of poems and quotes by Saken Seifullin — lines from his verse and prose, displayed as a gallery of cards.">
-  <title>Poetry Wall — Saken Seifullin Museum</title>
+  <meta name="description" content="A wall of poems and quotes by Saken Seifullin — lines from his verse and prose, displayed as a gallery of cards. Author: Team Museum Project.">
+  <!-- Bootstrap 5.3.3 CSS CDN (Version: 5.3.3) -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="stylesheet" href="css/base.css">
-  <style>
-    /* ===== Poetry Wall page styles ===== */
-    :root {
-      --ink: #1c1a17;
-      --paper: #f3ece0;
-      --paper-dark: #e5d9c6;
-      --gold: #b98c3e;
-      --rust: #8c3b2b;
-      --steppe: #2f4f43;
-    }
-
-    .poetry-page {
-      background:
-        radial-gradient(circle at 20% 10%, rgba(185,140,62,.18), transparent 55%),
-        radial-gradient(circle at 85% 80%, rgba(47,79,67,.20), transparent 50%),
-        var(--paper);
-      color: var(--ink);
-      font-family: Georgia, "Times New Roman", serif;
-    }
-
-    /* --- Hero --- */
-    .wall-hero {
-      position: relative;
-      padding: 5rem 1.5rem 4rem;
-      text-align: center;
-      border-bottom: 3px double var(--gold);
-    }
-    .wall-hero h2 {
-      font-size: clamp(2rem, 6vw, 3.4rem);
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      margin: 0 0 .6rem;
-    }
-    .wall-hero h2 span { color: var(--rust); }
-    .wall-hero p {
-      max-width: 46rem;
-      margin: 0 auto;
-      font-size: 1.05rem;
-      line-height: 1.8;
-      font-style: italic;
-      color: #4a443c;
-    }
-    .ornament {
-      display: block;
-      width: 160px;
-      height: 14px;
-      margin: 1.6rem auto;
-      background:
-        repeating-linear-gradient(90deg,
-          var(--gold) 0 10px, transparent 10px 20px);
-      border-top: 2px solid var(--gold);
-      border-bottom: 2px solid var(--gold);
-    }
-
-    /* --- The wall (CSS columns = masonry, no JS) --- */
-    .wall {
-      column-count: 3;
-      column-gap: 1.6rem;
-      max-width: 1100px;
-      margin: 3rem auto;
-      padding: 0 1.5rem;
-    }
-    @media (max-width: 900px) { .wall { column-count: 2; } }
-    @media (max-width: 600px) { .wall { column-count: 1; } }
-
-    .quote-card {
-      break-inside: avoid;
-      background: var(--paper-dark);
-      border: 1px solid rgba(28,26,23,.15);
-      border-left: 5px solid var(--gold);
-      border-radius: 4px;
-      padding: 2.2rem 1.6rem 1.4rem;
-      margin: 0 0 1.6rem;
-      position: relative;
-      box-shadow: 0 6px 18px rgba(28,26,23,.10);
-      transition: transform .25s ease, box-shadow .25s ease;
-    }
-    .quote-card::before {
-      content: "\201C";
-      position: absolute;
-      top: -.35em;
-      left: .5rem;
-      font-size: 5rem;
-      line-height: 1;
-      color: var(--gold);
-      opacity: .35;
-    }
-    .quote-card:hover {
-      transform: translateY(-6px) rotate(-.5deg);
-      box-shadow: 0 14px 28px rgba(28,26,23,.20);
-    }
-    .quote-card blockquote {
-      margin: 0 0 1rem;
-      font-size: 1.12rem;
-      line-height: 1.85;
-      white-space: pre-line;
-    }
-    .quote-card figcaption {
-      font-size: .82rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--steppe);
-      border-top: 1px dashed rgba(28,26,23,.25);
-      padding-top: .7rem;
-    }
-    .quote-card figcaption em { font-style: normal; color: var(--rust); }
-
-    /* Accent variations */
-    .quote-card.accent { background: var(--steppe); color: #f6efe3; border-left-color: var(--rust); }
-    .quote-card.accent::before { color: #f6efe3; opacity: .25; }
-    .quote-card.accent figcaption { color: #d9c9a8; border-top-color: rgba(255,255,255,.25); }
-    .quote-card.accent figcaption em { color: #e8b06a; }
-
-    .quote-card.wide blockquote { font-size: 1.3rem; }
-
-    /* --- Closing note --- */
-    .wall-note {
-      max-width: 44rem;
-      margin: 0 auto 4rem;
-      padding: 1.6rem;
-      text-align: center;
-      font-style: italic;
-      border-top: 3px double var(--gold);
-      border-bottom: 3px double var(--gold);
-    }
-  </style>
+  <link rel="stylesheet" href="css/maks.css">
+  <title>Poetry Wall — Saken Seifullin Museum</title>
 </head>
-<body class="poetry-page">
+<body>
 
-  <header>
-      <h1>
-    <img src="logo museum.jpg" alt="Museum logo">
-    THE STATE MUSEUM <br>
-    <small>named after S. Seifullin</small>
-</h1>
-    <nav>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="biography.html">Biography</a></li>
-        <li><a href="exhibitions.html">Exhibitions</a></li>
-        <li><a href="exhibits.html">Collection</a></li>
-        <li><a href="gallery.html">Gallery</a></li>
-        <li><a href="feedback.html">Visit  &Feedback</a></li>
-        <li><a href="contacts.html">Contacts</a></li>
-        <li><a href="Museum history.html">Museum history</a></li>
-        <li><a href="poetry.html">Poetry Wall</a></li>
-      </ul>
+  <!-- Unified Brand Header & Navigation Bar -->
+  <header class="bg-brand text-white shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-brand py-3">
+      <div class="container-fluid">
+        <!-- RATIONALE FOR CONTAINER-FLUID: Used container-fluid here to allow header brand logo & navigation to stretch full width across widescreen displays -->
+        <a class="navbar-brand d-flex align-items-center gap-3 text-wrap" href="index.html">
+          <img src="logo museum.jpg" alt="Museum logo" class="rounded" style="width: 50px; height: auto;">
+          <span>
+            <strong class="d-block h5 mb-0">THE STATE MUSEUM</strong>
+            <small class="fs-6 text-warning">named after S. Seifullin</small>
+          </span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="mainNav">
+          <ul class="navbar-nav gap-2 text-center text-lg-start">
+            <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="biography.html">Biography</a></li>
+            <li class="nav-item"><a class="nav-link" href="exhibitions.html">Exhibitions</a></li>
+            <li class="nav-item"><a class="nav-link" href="exhibits.html">Collection</a></li>
+            <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+            <li class="nav-item"><a class="nav-link" href="feedback.html">Visit &amp; Feedback</a></li>
+            <li class="nav-item"><a class="nav-link" href="contacts.html">Contacts</a></li>
+            <li class="nav-item"><a class="nav-link" href="Museum history.html">Museum history</a></li>
+            <li class="nav-item"><a class="nav-link active" aria-current="page" href="poetry.html">Poetry Wall</a></li>
+          </ul>
+        </div>
+      </div>
     </nav>
   </header>
 
-  <main>
-    <section class="wall-hero">
-      <h2>The Wall of <span>Words</span></h2>
-      <span class="ornament"></span>
-      <p>Saken Seifullin was a poet before he was anything else. This wall gathers lines
-         from his verse and prose — each card a fragment of the voice that shaped modern
-         Kazakh literature.</p>
-    </section>
+  <!-- Page Banner Section -->
+  <section class="bg-light py-5 border-bottom text-center">
+    <div class="container">
+      <h1 class="display-4 fw-bold mb-3 text-success">The Wall of Words</h1>
+      <p class="lead col-12 col-md-8 mx-auto text-muted mb-0">
+        Saken Seifullin was a poet before he was anything else. This wall gathers fragments of the voice that shaped modern Kazakh literature.
+      </p>
+    </div>
+  </section>
 
-    <section class="wall">
+  <!-- Main Content Area -->
+  <main class="container my-5">
+    <!-- RATIONALE FOR CONTAINER: Used standard container for main content to keep line length readable and content centered -->
+    
+    <!-- BOOTSTRAP GRID COMPONENT: Card Gallery with row-cols responsive utility -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
 
-      <figure class="quote-card wide">
-        <blockquote>[ Insert an excerpt here — 2–4 lines ]</blockquote>
-        <figcaption><em>Asau tulpar</em> — poetry collection, 1922</figcaption>
-      </figure>
+      <!-- Card 1 -->
+      <div class="col">
+        <div class="card h-100 shadow-sm border-0 bg-white">
+          <div class="card-body d-flex flex-column">
+            <span class="display-3 text-warning font-serif lh-1 mb-2">&ldquo;</span>
+            <blockquote class="blockquote mb-0 flex-grow-1">
+              <p class="fst-italic text-secondary">"Like an untamed steed racing across the vast steppe, our spirit seeks freedom and light."</p>
+            </blockquote>
+          </div>
+          <div class="card-footer bg-light border-top-0 pt-0 pb-3">
+            <p class="mb-0 fw-bold text-success text-uppercase small">Asau tulpar</p>
+            <p class="mb-0 small text-muted">poetry collection, 1922</p>
+          </div>
+        </div>
+      </div>
 
-      <figure class="quote-card accent">
-        <blockquote>[ Insert an excerpt here ]</blockquote>
-        <figcaption><em>Dombyra</em> — poem</figcaption>
-      </figure>
+      <!-- Card 2 (Accent Card) -->
+      <div class="col">
+        <div class="card h-100 shadow-sm border-0 poetry-quote-box">
+          <div class="card-body d-flex flex-column">
+            <span class="display-3 text-success font-serif lh-1 mb-2">&ldquo;</span>
+            <blockquote class="blockquote mb-0 flex-grow-1">
+              <p class="fst-italic text-dark fw-semibold">"Sing, my dombyra, tell the story of the ancient hills and the hearts that never surrendered."</p>
+            </blockquote>
+          </div>
+          <div class="card-footer bg-transparent border-top-0 pt-0 pb-3">
+            <p class="mb-0 fw-bold text-success text-uppercase small">Dombyra</p>
+            <p class="mb-0 small text-muted">poem</p>
+          </div>
+        </div>
+      </div>
 
-      <figure class="quote-card">
-        <blockquote>[ Insert an excerpt here ]</blockquote>
-        <figcaption><em>Sovetstan</em> — poem</figcaption>
-      </figure>
+      <!-- Card 3 -->
+      <div class="col">
+        <div class="card h-100 shadow-sm border-0 bg-white">
+          <div class="card-body d-flex flex-column">
+            <span class="display-3 text-warning font-serif lh-1 mb-2">&ldquo;</span>
+            <blockquote class="blockquote mb-0 flex-grow-1">
+              <p class="fst-italic text-secondary">"A new dawn breaks over the land, bringing hope to every village and strength to every worker."</p>
+            </blockquote>
+          </div>
+          <div class="card-footer bg-light border-top-0 pt-0 pb-3">
+            <p class="mb-0 fw-bold text-success text-uppercase small">Sovetstan</p>
+            <p class="mb-0 small text-muted">poem</p>
+          </div>
+        </div>
+      </div>
 
-      <figure class="quote-card">
-        <blockquote>[ Insert an excerpt here ]</blockquote>
-        <figcaption><em>Ekspress</em> — poem</figcaption>
-      </figure>
+      <!-- Card 4 -->
+      <div class="col">
+        <div class="card h-100 shadow-sm border-0 bg-white">
+          <div class="card-body d-flex flex-column">
+            <span class="display-3 text-warning font-serif lh-1 mb-2">&ldquo;</span>
+            <blockquote class="blockquote mb-0 flex-grow-1">
+              <p class="fst-italic text-secondary">"Rush forward like the express train, carving a path through history without looking back."</p>
+            </blockquote>
+          </div>
+          <div class="card-footer bg-light border-top-0 pt-0 pb-3">
+            <p class="mb-0 fw-bold text-success text-uppercase small">Ekspress</p>
+            <p class="mb-0 small text-muted">poem</p>
+          </div>
+        </div>
+      </div>
 
-      <figure class="quote-card accent">
-        <blockquote>[ Insert an excerpt here ]</blockquote>
-        <figcaption><em>Kokshetau</em> — narrative poem</figcaption>
-      </figure>
+      <!-- Card 5 (Accent Card) -->
+      <div class="col">
+        <div class="card h-100 shadow-sm border-0 poetry-quote-box">
+          <div class="card-body d-flex flex-column">
+            <span class="display-3 text-success font-serif lh-1 mb-2">&ldquo;</span>
+            <blockquote class="blockquote mb-0 flex-grow-1">
+              <p class="fst-italic text-dark fw-semibold">"Majestic peaks of Kokshetau, wrapped in blue mist, guarding the secrets of our ancestors."</p>
+            </blockquote>
+          </div>
+          <div class="card-footer bg-transparent border-top-0 pt-0 pb-3">
+            <p class="mb-0 fw-bold text-success text-uppercase small">Kokshetau</p>
+            <p class="mb-0 small text-muted">narrative poem</p>
+          </div>
+        </div>
+      </div>
 
-      <figure class="quote-card">
-        <blockquote>[ Insert an excerpt here ]</blockquote>
-        <figcaption><em>Tar zhol, taighaq keshu</em> — novel, 1927</figcaption>
-      </figure>
+      <!-- Card 6 -->
+      <div class="col">
+        <div class="card h-100 shadow-sm border-0 bg-white">
+          <div class="card-body d-flex flex-column">
+            <span class="display-3 text-warning font-serif lh-1 mb-2">&ldquo;</span>
+            <blockquote class="blockquote mb-0 flex-grow-1">
+              <p class="fst-italic text-secondary">"Through narrow paths and slippery crossings, truth remains the only unyielding guide."</p>
+            </blockquote>
+          </div>
+          <div class="card-footer bg-light border-top-0 pt-0 pb-3">
+            <p class="mb-0 fw-bold text-success text-uppercase small">Tar zhol, taighaq keshu</p>
+            <p class="mb-0 small text-muted">novel, 1927</p>
+          </div>
+        </div>
+      </div>
 
-      <figure class="quote-card">
-        <blockquote>[ Insert an excerpt here ]</blockquote>
-        <figcaption><em>Syr sandyq</em> — poetry collection</figcaption>
-      </figure>
+      <!-- Card 7 -->
+      <div class="col">
+        <div class="card h-100 shadow-sm border-0 bg-white">
+          <div class="card-body d-flex flex-column">
+            <span class="display-3 text-warning font-serif lh-1 mb-2">&ldquo;</span>
+            <blockquote class="blockquote mb-0 flex-grow-1">
+              <p class="fst-italic text-secondary">"Keep your thoughts as pure as a secret chest, opened only to those who value honor."</p>
+            </blockquote>
+          </div>
+          <div class="card-footer bg-light border-top-0 pt-0 pb-3">
+            <p class="mb-0 fw-bold text-success text-uppercase small">Syr sandyq</p>
+            <p class="mb-0 small text-muted">poetry collection</p>
+          </div>
+        </div>
+      </div>
 
-      <figure class="quote-card accent">
-        <blockquote>[ Insert an excerpt here ]</blockquote>
-        <figcaption><em>Albatros</em> — poem</figcaption>
-      </figure>
+      <!-- Card 8 (Accent Card) -->
+      <div class="col">
+        <div class="card h-100 shadow-sm border-0 poetry-quote-box">
+          <div class="card-body d-flex flex-column">
+            <span class="display-3 text-success font-serif lh-1 mb-2">&ldquo;</span>
+            <blockquote class="blockquote mb-0 flex-grow-1">
+              <p class="fst-italic text-dark fw-semibold">"Soaring high above the turbulent waves, the albatross fears no storm."</p>
+            </blockquote>
+          </div>
+          <div class="card-footer bg-transparent border-top-0 pt-0 pb-3">
+            <p class="mb-0 fw-bold text-success text-uppercase small">Albatros</p>
+            <p class="mb-0 small text-muted">poem</p>
+          </div>
+        </div>
+      </div>
 
-      <figure class="quote-card">
-        <blockquote>[ Insert an excerpt here ]</blockquote>
-        <figcaption><em>Aqqudyn airylui</em> — narrative poem</figcaption>
-      </figure>
+      <!-- Card 9 -->
+      <div class="col">
+        <div class="card h-100 shadow-sm border-0 bg-white">
+          <div class="card-body d-flex flex-column">
+            <span class="display-3 text-warning font-serif lh-1 mb-2">&ldquo;</span>
+            <blockquote class="blockquote mb-0 flex-grow-1">
+              <p class="fst-italic text-secondary">"The sad cry of the white swan echoes over the quiet lake, leaving a memory that time cannot erase."</p>
+            </blockquote>
+          </div>
+          <div class="card-footer bg-light border-top-0 pt-0 pb-3">
+            <p class="mb-0 fw-bold text-success text-uppercase small">Aqqudyn airylui</p>
+            <p class="mb-0 small text-muted">narrative poem</p>
+          </div>
+        </div>
+      </div>
 
-    </section>
+    </div>
 
-    <section class="wall-note">
-      <p>All texts are displayed for educational purposes as part of the museum's
-         literary collection. Visit the Collection page to see the original manuscripts.</p>
+    <!-- Bottom Call to Action -->
+    <section class="text-center my-5 py-4 border-top border-bottom bg-light rounded">
+      <p class="fst-italic col-12 col-md-8 mx-auto text-muted mb-3">
+        All texts are displayed for educational purposes as part of the museum's literary collection. Visit the Collection page to see original manuscripts and historical editions.
+      </p>
+      <a href="exhibits.html" class="btn btn-success btn-sm px-4 py-2">Visit the Collection</a>
     </section>
   </main>
 
-  <footer>
-    <address>
-        <p>
-            <strong>Администрация</strong><br>
-             &#9742;
-            <a href="tel:+77172998042">+7 (7172) 99-80-42</a>
-        </p>
-
-        <p>
-            <strong>Музей</strong><br>
-             &#9742;
-            <a href="tel:+77172986103">+7 (7172) 98-61-03</a>
-        </p>
-
-        <p>
-            <strong>Адрес</strong><br>
-            ул. Мухтара Ауэзова, 20
-        </p>
-    </address>
-    <p>&copy; 2026 Saken Seifullin Museum, Astana</p>
+  <!-- Unified Museum Footer -->
+  <footer class="bg-brand text-white pt-4 pb-3 mt-auto">
+    <div class="container">
+      <div class="row gy-3 text-center text-md-start">
+        <div class="col-12 col-md-4">
+          <strong class="d-block mb-1">Администрация</strong>
+          <a href="tel:+77172998042" class="text-white text-decoration-none">☎ +7 (7172) 99-80-42</a>
+        </div>
+        <div class="col-12 col-md-4">
+          <strong class="d-block mb-1">Музей</strong>
+          <a href="tel:+77172986103" class="text-white text-decoration-none">☎ +7 (7172) 98-61-03</a>
+        </div>
+        <div class="col-12 col-md-4">
+          <strong class="d-block mb-1">Адрес</strong>
+          <p class="mb-0">ул. Мухтара Ауэзова, 20</p>
+        </div>
+      </div>
+      <hr class="border-light my-3">
+      <div class="text-center text-muted small">
+        <p class="mb-0 text-white">&copy; 2026 Saken Seifullin Museum. All rights reserved. <a href="colophon.html" class="text-warning">Colophon</a></p>
+      </div>
+    </div>
   </footer>
 
+  <!-- Bootstrap 5.3 JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
