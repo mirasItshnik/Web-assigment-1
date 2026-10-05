@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Book a museum excursion or send your feedback to the Saken Seifullin Museum administration. Author: Team Museum Project.">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/base.css">
+  <title>Visit & Feedback - Saken Seifullin Museum</title>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  <header class="bg-brand text-white shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-brand py-3" id="main-navbar">
+      <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center gap-3 text-wrap" href="index.html" id="brand-link">
+          <img src="logo museum.jpg" alt="Museum logo" class="rounded" style="width: 50px; height: auto;">
+          <span>
+            <strong class="d-block h5 mb-0">THE STATE MUSEUM</strong>
+            <small class="fs-6 text-warning">named after S. Seifullin</small>
+          </span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" id="navbar-toggler-btn">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav gap-2 text-center text-lg-start">
+            <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="biography.html">Biography</a></li>
+            <li class="nav-item"><a class="nav-link" href="exhibitions.html">Exhibitions</a></li>
+            <li class="nav-item"><a class="nav-link" href="exhibits.html">Collection</a></li>
+            <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+            <li class="nav-item"><a class="nav-link active" href="feedback.html">Visit & Feedback</a></li>
+            <li class="nav-item"><a class="nav-link" href="contacts.html">Contacts</a></li>
+            <li class="nav-item"><a class="nav-link" href="Museum history.html">Museum history</a></li>
+            <li class="nav-item"><a class="nav-link" href="poetry.html">Poetry Wall</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container my-5 flex-grow-1" id="feedback-main-content">
+    <div class="row g-5">
+      
+      <!-- Форма бронирования экскурсии -->
+      <section class="col-12 col-lg-7">
+        <div class="p-4 border rounded shadow-sm bg-white" id="excursion-card">
+          <h2 class="h3 fw-bold mb-4 text-success">Book a Guided Excursion</h2>
+          
+          <form id="excursion-form">
+            <div class="mb-3">
+              <label for="visitor-name" class="form-label fw-semibold">Full Name:</label>
+              <input type="text" class="form-control" id="visitor-name" name="visitor-name" placeholder="John Doe" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="visitor-email" class="form-label fw-semibold">Email Address:</label>
+              <input type="email" class="form-control" id="visitor-email" name="visitor-email" placeholder="example@domain.com" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="visit-date" class="form-label fw-semibold">Preferred Date:</label>
+              <input type="date" class="form-control" id="visit-date" name="visit-date" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="tour-language" class="form-label fw-semibold">Guided Tour Language:</label>
+              <select class="form-select" id="tour-language" name="tour-language">
+                <option value="en">English</option>
+                <option value="kk">Қазақша</option>
+                <option value="ru">Русский</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold d-block">Visitor Category:</label>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="cat-student" name="category" value="student">
+                <label class="form-check-label" for="cat-student">Student</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="cat-adult" name="category" value="adult" checked>
+                <label class="form-check-label" for="cat-adult">Adult</label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" id="cat-senior" name="category" value="senior">
+                <label class="form-check-label" for="cat-senior">Senior</label>
+              </div>
+            </div>
+
+            <!-- Динамическое поле для студентов (будет управляться через JS) -->
+            <div class="mb-3 hidden" id="student-id-block">
+              <label for="student-card-num" class="form-label fw-semibold">Student Card Number:</label>
+              <input type="text" class="form-control" id="student-card-num" placeholder="Enter ID number">
+            </div>
+
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="newsletter" name="newsletter" value="yes">
+              <label class="form-check-label" for="newsletter">Subscribe to museum monthly updates</label>
+            </div>
+
+            <div class="mb-4">
+              <label for="special-requests" class="form-label fw-semibold">Special Requests / Questions:</label>
+              <textarea class="form-control" id="special-requests" name="special-requests" rows="3" placeholder="Specify group size or accessibility needs..."></textarea>
+            </div>
+
+            <div class="d-flex gap-2 flex-wrap">
+              <button type="submit" class="btn btn-success btn-lg" id="btn-submit-excursion">Submit Request</button>
+              <button type="reset" class="btn btn-outline-secondary" id="btn-reset-excursion">Clear Form</button>
+            </div>
+          </form>
+
+          <!-- Пустой контейнер под ответ формы -->
+          <div id="excursion-response-area" class="mt-4 p-3 rounded hidden"></div>
+        </div>
+      </section>
+
+      <!-- Правая колонка: Форма отзыва с рейтингом и счётчиком символов -->
+      <section class="col-12 col-lg-5">
+        <div class="p-4 border rounded shadow-sm bg-white mb-4" id="review-card">
+          <h2 class="h3 fw-bold mb-4 text-success">Visitor Feedback</h2>
+          <form id="feedback-form">
+            
+            <!-- Оценка музея (Рейтинг звёздами) -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold d-block">Museum Rating:</label>
+              <div class="rating-stars" id="rating-container">
+                <span class="fs-4 text-warning" style="cursor:pointer;" id="star-1">⭐</span>
+                <span class="fs-4 text-warning" style="cursor:pointer;" id="star-2">⭐</span>
+                <span class="fs-4 text-warning" style="cursor:pointer;" id="star-3">⭐</span>
+                <span class="fs-4 text-warning" style="cursor:pointer;" id="star-4">⭐</span>
+                <span class="fs-4 text-warning" style="cursor:pointer;" id="star-5">⭐</span>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <label for="feedback-text" class="form-label fw-semibold">Your Feedback:</label>
+                <small class="text-muted" id="char-counter">0 / 500</small>
+              </div>
+              <textarea class="form-control" id="feedback-text" name="feedback-text" rows="4" maxlength="500" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-outline-success btn-sm" id="btn-submit-feedback">Send Review</button>
+          </form>
+
+          <!-- Пустой контейнер под сообщение об успешном отзыве -->
+          <div id="feedback-response-area" class="mt-3 p-3 rounded hidden"></div>
+        </div>
+
+        <div class="p-4 border rounded bg-light" id="booking-status-card">
+          <h3 class="h5 fw-bold mb-2">Group Booking Status</h3>
+          <p class="small text-muted mb-3">Group bookings for weekends are currently full.</p>
+          <button type="button" class="btn btn-secondary disabled" aria-disabled="true" id="btn-closed-slots">Weekend Slots Closed</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="bg-brand text-white pt-4 pb-3 mt-auto" id="main-footer">
+    <div class="container">
+      <div class="row gy-3">
+        <div class="col-12 col-md-4">
+          <strong class="d-block mb-1">Администрация</strong>
+          <a href="tel:+77172998042" class="text-white text-decoration-none">☎ +7 (7172) 99-80-42</a>
+        </div>
+        <div class="col-12 col-md-4">
+          <strong class="d-block mb-1">Музей</strong>
+          <a href="tel:+77172986103" class="text-white text-decoration-none">☎ +7 (7172) 98-61-03</a>
+        </div>
+        <div class="col-12 col-md-4">
+          <strong class="d-block mb-1">Адрес</strong>
+          <p class="mb-0">ул. Мухтара Ауэзова, 20</p>
+        </div>
+      </div>
+      <hr class="border-light my-3">
+      <div class="text-center text-muted small">
+        <p class="mb-0 text-white">&copy; 2026 Saken Seifullin Museum. All rights reserved. <a href="colophon.html" class="text-warning">Colophon</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,805 @@
+
+/* @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Open+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --primary-dark: #0f3832;
+  --accent-gold: #c8a251;
+  --accent-gold-hover: #b08d3e;
+  --bg-light: #f4f6f4;
+  --card-bg: #ffffff;
+  --card-border: #e2e8e5;
+  --text-dark: #22332d;
+  --text-muted: #556660;
+  --white: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+.site-header {
+  background-color: var(--primary-dark);
+  color: var(--white);
+  padding: 1rem 3rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  fill: var(--white);
+}
+
+.logo-text h1 {
+  font-family: 'Merriweather', serif;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1.1;
+  color: var(--white);
+}
+
+.logo-text span {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.main-nav ul {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  list-style: none;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: color 0.2s, border-color 0.2s;
+  padding-bottom: 4px;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--white);
+  border-bottom: 2px solid var(--accent-gold);
+}
+
+
+.hero-banner {
+  color: var(--white);
+  padding: 4rem 3rem;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to right, rgba(15, 56, 50, 0.92) 40%, rgba(15, 56, 50, 0.4));
+  z-index: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.hero-title {
+  font-family: 'Merriweather', serif;
+  font-size: 2.5rem;
+  font-weight: 400;
+  margin-bottom: 0.8rem;
+  color: var(--white);
+}
+
+.hero-subtitle {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 650px;
+  margin-bottom: 1.2rem;
+}
+
+.gold-divider {
+  width: 60px;
+  height: 3px;
+  background-color: var(--accent-gold);
+}
+.container {
+  max-width: 1200px;
+  margin: 2.5rem auto;
+  padding: 0 2rem;
+}
+
+.section-title {
+  font-family: 'Merriweather', serif;
+  font-size: 1.75rem;
+  color: var(--primary-dark);
+  /*margin-bottom: 1.2rem;
+
+.btn-primary {
+  display: inline-block;
+  background-color: var(--accent-gold);
+  color: var(--primary-dark);
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  margin-top: 1rem;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-gold-hover);
+}
+
+.intro-grid {
+  width: 100%;
+  height: 350px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.div1{
+  display: flex;
+   object-fit: cover;
+  flex-direction: column;
+  gap: 1rem;
+   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.featured-img{
+   display: flex;
+    object-fit: cover;
+   flex-direction: column;
+    width: 100%;
+    
+
+}
+
+  /*width: 100%;
+  height: 350px;
+  object-fit: cover;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.8rem;
+  margin-top: 1.5rem;
+}
+
+.info-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.info-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+}
+
+.card-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 1.2rem;
+}
+
+.card-title {
+  font-family: 'Merriweather', serif;
+  font-size: 1.1rem;
+  color: var(--primary-dark);
+  margin-bottom: 0.5rem;
+}
+
+.card-text {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.bio-article {
+  background-color: var(--card-bg);
+  padding: 2.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--card-border);
+}
+
+.timeline {
+  border-left: 3px solid var(--accent-gold);
+  padding-left: 1.5rem;
+  margin: 2rem 0;
+}
+
+.timeline-item {
+  margin-bottom: 1.8rem;
+  position: relative;
+}
+
+.timeline-year {
+  font-family: 'Merriweather', serif;
+  font-weight: 700;
+  color: var(--accent-gold);
+  font-size: 1.1rem;
+}
+
+.timeline-title {
+  font-family: 'Merriweather', serif;
+  color: var(--primary-dark);
+  font-size: 1.15rem;
+  margin: 0.2rem 0;
+}
+
+.badge-status {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.badge-permanent { background-color: #e3f2fd; color: #0d47a1; }
+.badge-temporary { background-color: #fff3e0; color: #e65100; }
+
+.site-footer {
+  background-color: var(--primary-dark);
+  color: var(--white);
+  padding: 2.5rem 3rem 1.2rem 3rem;
+  margin-top: 4rem;
+}
+
+.footer-top {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.footer-contacts {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.footer-bottom {
+  max-width: 1200px;
+  margin: 1.2rem auto 0 auto;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.footer-bottom a {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+}
+
+@media (max-width: 850px) {
+  .intro-grid { grid-template-columns: 1fr; }
+  .header-container { flex-direction: column; gap: 15px; }
+  .main-nav ul { flex-wrap: wrap; justify-content: center; gap: 10px; }
+  .footer-top { flex-direction: column; gap: 15px; align-items: flex-start; }
+} 
+*/
+/* @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Open+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --primary-dark: #0f3832;
+  --accent-gold: #c8a251;
+  --accent-gold-hover: #b08d3e;
+  --bg-light: #f4f6f4;
+  --card-bg: #ffffff;
+  --card-border: #e2e8e5;
+  --text-dark: #22332d;
+  --text-muted: #556660;
+  --white: #ffffff;
+
+  --font-serif: 'Merriweather', serif;
+  --font-sans: 'Open Sans', sans-serif;
+  --page-width: 1200px;
+  --radius: 6px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-light);
+  color: var(--text-dark);
+  line-height: 1.6;
+}
+
+
+.site-header {
+  background-color: var(--primary-dark);
+  color: var(--white);
+  padding: 1rem 3rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-container {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  fill: var(--white);
+}
+
+.logo-text h1 {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1.1;
+  color: var(--white);
+}
+
+.logo-text span {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.main-nav ul {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  list-style: none;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding-bottom: 4px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--white);
+  border-bottom: 2px solid var(--accent-gold);
+}
+
+
+.hero-banner {
+  position: relative;
+  color: var(--white);
+  padding: 4rem 3rem;
+  background-size: cover;
+  background-position: center;
+}
+
+
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(15, 56, 50, 0.92) 40%, rgba(15, 56, 50, 0.4));
+  z-index: 1;
+}
+
+
+.hero-home        { background-image: url('astana-16-1.jpg'); }
+.hero-bio         { background-image: url('Saken s suit.png'); }
+.hero-exhibitions { background-image: url('Museum inner view.jpeg'); }
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: var(--page-width);
+  margin: 0 auto;
+}
+
+.hero-title {
+  font-family: var(--font-serif);
+  font-size: 2.5rem;
+  font-weight: 400;
+  margin-bottom: 0.8rem;
+  color: var(--white);
+}
+
+.hero-subtitle {
+  font-size: 1.05rem;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 650px;
+  margin-bottom: 1.2rem;
+}
+
+.gold-divider {
+  width: 60px;
+  height: 3px;
+  background-color: var(--accent-gold);
+}
+
+.container {
+  max-width: var(--page-width);
+  margin: 2.5rem auto;
+  padding: 0 2rem;
+}
+
+.section-title {
+  font-family: var(--font-serif);
+  font-size: 1.75rem;
+  color: var(--primary-dark);
+}
+
+
+.subsection-title {
+  font-size: 1.35rem;
+}
+
+
+.section-title--spaced {
+  margin-top: 3.5rem;
+}
+
+
+.btn-primary {
+  display: inline-block;
+  background-color: var(--accent-gold);
+  color: var(--primary-dark);
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+  margin-top: 1rem;
+  transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+  background-color: var(--accent-gold-hover);
+}
+
+
+.intro-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+
+.intro-grid--compact {
+  margin: 2rem 0;
+}
+
+.intro-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.featured-img {
+  display: block;
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.8rem;
+  margin-top: 1.5rem;
+}
+
+.info-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.info-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+.card-img {
+  display: block;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 1.2rem;
+}
+
+.card-title {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  color: var(--primary-dark);
+  margin-bottom: 0.5rem;
+}
+
+.card-text {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+
+.badge-status {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.badge-permanent { background-color: #e3f2fd; color: #0d47a1; }
+.badge-temporary { background-color: #fff3e0; color: #e65100; }
+
+
+.bio-article {
+  background-color: var(--card-bg);
+  padding: 2.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--card-border);
+}
+
+.timeline {
+  border-left: 3px solid var(--accent-gold);
+  padding-left: 1.5rem;
+  margin: 2rem 0;
+}
+
+.timeline-item {
+  margin-bottom: 1.8rem;
+}
+
+.timeline-year {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  color: var(--accent-gold);
+  font-size: 1.1rem;
+}
+
+.timeline-title {
+  font-family: var(--font-serif);
+  color: var(--primary-dark);
+  font-size: 1.15rem;
+  margin: 0.2rem 0;
+}
+
+
+.site-footer {
+  background-color: var(--primary-dark);
+  color: var(--white);
+  padding: 2.5rem 3rem 1.2rem;
+  margin-top: 4rem;
+}
+
+.footer-top {
+  max-width: var(--page-width);
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.footer-contacts {
+  display: flex;
+  gap: 2rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.footer-bottom {
+  max-width: var(--page-width);
+  margin: 1.2rem auto 0;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.footer-bottom a {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+}
+
+
+@media (max-width: 850px) {
+  .header-container { flex-direction: column; gap: 15px; }
+  .main-nav ul { flex-wrap: wrap; justify-content: center; gap: 10px; }
+  .intro-grid { grid-template-columns: 1fr; }
+  .footer-top { flex-direction: column; gap: 15px; align-items: flex-start; }
+
+  .footer-contacts { flex-wrap: wrap; gap: 0.5rem 2rem; }
+} */
+ /* Correction layer on top of Bootstrap v5.3.3.
+   Bootstrap does the layout, spacing, navigation, buttons and responsiveness.
+   This file only sets brand colours, fonts and a few details Bootstrap has no class for. */
+
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Open+Sans:wght@400;500;600;700&display=swap');
+
+/* Brand colours and fonts, fed into Bootstrap's own CSS variables,
+   so bg-primary, text-primary, links and body text use the museum palette. */
+:root {
+  --primary-dark: #0f3832;
+  --accent-gold: #c8a251;
+  --accent-gold-hover: #b08d3e;
+
+  --bs-primary: #0f3832;
+  --bs-primary-rgb: 15, 56, 50;
+  --bs-link-color-rgb: 15, 56, 50;
+  --bs-link-hover-color-rgb: 176, 141, 62;
+  --bs-body-bg: #f4f6f4;
+  --bs-body-color: #22332d;
+  --bs-body-font-family: 'Open Sans', sans-serif;
+}
+
+/* Headings use the serif brand font; sizes and weights come from Bootstrap classes. */
+h1, h2, h3, h4 {
+  font-family: 'Merriweather', serif;
+}
+
+/* Gold helpers: Bootstrap has no gold theme colour. border-gold only sets the
+   variable that Bootstrap's border-start utility already reads. */
+.text-gold { color: var(--accent-gold); }
+.border-gold { --bs-border-color: var(--accent-gold); }
+
+/* Logo: the SVG has no size of its own and must follow the text colour. */
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  fill: currentColor;
+}
+
+.logo-text h1 { letter-spacing: 1px; }
+
+/* Active / hovered menu link gets the gold underline from the brand.
+   Bootstrap's navbar only changes the colour. */
+.navbar .nav-link.active,
+.navbar .nav-link:hover {
+  box-shadow: inset 0 -2px 0 var(--accent-gold);
+}
+
+/* Menu toggler without JavaScript.
+   Bootstrap hides the collapsed menu with .collapse:not(.show) and normally needs its JS to add .show.
+   Here the hidden checkbox does that job: while it is ticked, the menu is shown.
+   This selector is more specific than Bootstrap's rule, so no !important is needed.
+   From xl up, navbar-expand-xl keeps the menu visible anyway. */
+.nav-toggle-input:checked ~ .navbar-collapse { display: block; }
+
+/* A label has no pointer cursor or focus ring like a button; restore them. */
+.navbar-toggler { cursor: pointer; }
+.nav-toggle-input:focus-visible + .navbar-toggler {
+  box-shadow: 0 0 0 var(--bs-navbar-toggler-focus-width);
+}
+
+/* Hero: photo background with the green gradient overlay.
+   Bootstrap has no background-image or background-size utilities.
+   position-relative / z-1 come from Bootstrap classes in the HTML. */
+.hero-banner {
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-banner::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(15, 56, 50, 0.92) 40%, rgba(15, 56, 50, 0.4));
+}
+
+/* One background photo per page (replaces the old inline style attributes). */
+.hero-home { background-image: url("astana-16-1.jpg"); }
+.hero-bio { background-image: url("Saken s suit.png"); }
+.hero-exhibitions { background-image: url("Museum inner view.jpeg"); }
+
+.gold-divider {
+  width: 60px;
+  height: 3px;
+  background-color: var(--accent-gold);
+}
+
+/* Override: Bootstrap's btn-primary is blue. Re-pointing its variables to the brand gold
+   is the documented way to theme a button without Sass. */
+.btn-primary {
+  --bs-btn-color: var(--primary-dark);
+  --bs-btn-bg: var(--accent-gold);
+  --bs-btn-border-color: var(--accent-gold);
+  --bs-btn-hover-color: var(--primary-dark);
+  --bs-btn-hover-bg: var(--accent-gold-hover);
+  --bs-btn-hover-border-color: var(--accent-gold-hover);
+  --bs-btn-active-color: var(--primary-dark);
+  --bs-btn-active-bg: var(--accent-gold-hover);
+  --bs-btn-active-border-color: var(--accent-gold-hover);
+}
+
+/* Override: outline button in the brand green instead of Bootstrap blue. */
+.btn-outline-primary {
+  --bs-btn-color: var(--primary-dark);
+  --bs-btn-border-color: var(--primary-dark);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--primary-dark);
+  --bs-btn-hover-border-color: var(--primary-dark);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--primary-dark);
+  --bs-btn-active-border-color: var(--primary-dark);
+}
+
+/* Cards: equal image height (object-fit-cover in the HTML crops the photo)
+   and a small lift on hover. */
+.info-card .card-img-top { height: 200px; }
+.info-card { transition: transform 0.2s; }
+.info-card:hover { transform: translateY(-4px); }
