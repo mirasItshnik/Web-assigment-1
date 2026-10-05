@@ -44,8 +44,7 @@
 
   <main class="container my-5 flex-grow-1" id="feedback-main-content">
     <div class="row g-5">
-      
-      <!-- Форма бронирования экскурсии -->
+
       <section class="col-12 col-lg-7">
         <div class="p-4 border rounded shadow-sm bg-white" id="excursion-card">
           <h2 class="h3 fw-bold mb-4 text-success">Book a Guided Excursion</h2>
@@ -91,7 +90,6 @@
               </div>
             </div>
 
-            <!-- Динамическое поле для студентов (будет управляться через JS) -->
             <div class="mb-3 hidden" id="student-id-block">
               <label for="student-card-num" class="form-label fw-semibold">Student Card Number:</label>
               <input type="text" class="form-control" id="student-card-num" placeholder="Enter ID number">
@@ -113,18 +111,15 @@
             </div>
           </form>
 
-          <!-- Пустой контейнер под ответ формы -->
           <div id="excursion-response-area" class="mt-4 p-3 rounded hidden"></div>
         </div>
       </section>
 
-      <!-- Правая колонка: Форма отзыва с рейтингом и счётчиком символов -->
       <section class="col-12 col-lg-5">
         <div class="p-4 border rounded shadow-sm bg-white mb-4" id="review-card">
           <h2 class="h3 fw-bold mb-4 text-success">Visitor Feedback</h2>
           <form id="feedback-form">
             
-            <!-- Оценка музея (Рейтинг звёздами) -->
             <div class="mb-3">
               <label class="form-label fw-semibold d-block">Museum Rating:</label>
               <div class="rating-stars" id="rating-container">
@@ -146,8 +141,7 @@
 
             <button type="submit" class="btn btn-outline-success btn-sm" id="btn-submit-feedback">Send Review</button>
           </form>
-
-          <!-- Пустой контейнер под сообщение об успешном отзыве -->
+          
           <div id="feedback-response-area" class="mt-3 p-3 rounded hidden"></div>
         </div>
 

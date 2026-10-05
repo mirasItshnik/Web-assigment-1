@@ -47,16 +47,13 @@
       <h2 class="display-6 fw-bold border-bottom pb-2 text-center text-md-start">Visual Tour of the Museum</h2>
       <p class="lead text-muted text-center text-md-start mb-4">Explore high-resolution images highlighting our exterior architecture, inner rooms, and archived manuscripts.</p>
       
-      <!-- Панель управления галереей -->
       <div class="d-flex flex-wrap gap-2 mb-4 justify-content-center justify-content-md-start" id="gallery-controls">
         <button type="button" class="btn btn-outline-success btn-sm" id="btn-fact-of-day">💡 Fact of the Day</button>
         <span class="badge bg-secondary align-self-center p-2" id="photo-counter">Photo 1 of 3</span>
       </div>
 
-      <!-- Контейнер под "Факт дня" (скрыт через d-none) -->
       <div id="fact-container" class="alert alert-warning d-none mb-4 shadow-sm"></div>
 
-      <!-- Carousel / Слайдер -->
       <div id="museumCarousel" class="carousel slide shadow-lg rounded overflow-hidden mb-5" data-bs-ride="carousel">
         <div class="carousel-indicators">
           <button type="button" data-bs-target="#museumCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -96,7 +93,6 @@
         </button>
       </div>
 
-      <!-- Сетка фото-карточек -->
       <div class="row g-4 align-items-stretch mb-4" id="gallery-cards-grid">
         <div class="col-12 col-md-4" id="gallery-item-1">
           <div class="card h-100 shadow-sm border-0 position-relative">
@@ -134,8 +130,7 @@
           </div>
         </div>
       </div>
-
-      <!-- Пустой JS-контейнер для статуса (Freeze) -->
+      
       <div id="gallery-status-output" class="mt-4"></div>
 
       <div class="poetry-quote-box p-4 rounded shadow-sm border-start border-4 border-warning mt-4">
