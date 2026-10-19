@@ -765,6 +765,12 @@ h1, h2, h3, h4 {
 .hero-home { background-image: url("astana-16-1.jpg"); }
 .hero-bio { background-image: url("Saken s suit.png"); }
 .hero-exhibitions { background-image: url("Museum inner view.jpeg"); }
+.hero-gallery { background-image: url("gallery.jpg"); }
+.hero-exhibits { background-image: url("exhibits.png"); }
+.hero-feedback { background-image: url("feedback.png"); }
+.hero-museum-history { background-image: url("./museum.jpg"); }
+.hero-poetry { background-image: url("./DSC02902.jpg"); }
+.hero-contacts { background-image: url("./caption.jpg"); }
 
 .gold-divider {
   width: 60px;

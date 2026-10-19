@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Book a museum excursion or send your feedback to the Saken Seifullin Museum administration. Author: Team Museum Project.">
+  <meta name="description" content="Book a museum excursion, calculate individual or group ticket prices, and send feedback to the Saken Seifullin Museum.">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="css/base.css">
-  <title>Visit & Feedback - Saken Seifullin Museum</title>
+  <link rel="stylesheet" href="./style1.css">
+  <title>Visit & Booking - Saken Seifullin Museum</title>
 </head>
 <body class="d-flex flex-column min-vh-100">
 
@@ -42,86 +43,156 @@
     </nav>
   </header>
 
+  <section class="hero-banner hero-feedback position-relative text-white py-5">
+    <div class="hero-content container position-relative z-1 py-md-4">
+      <div class="row">
+        <div class="col-12 col-lg-8 text-center text-md-start">
+          <h1 class="hero-title display-5 mb-3">Plan Your Visit & Group Tours</h1>
+          <p class="hero-subtitle lead mb-4">Book individual or large group tours with automatic group discounts, smart schedule validation, and detailed price calculator.</p>
+          <div class="gold-divider mx-auto mx-md-0"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <main class="container my-5 flex-grow-1" id="feedback-main-content">
     <div class="row g-5">
-
+      
+      <!-- Секция онлайн записи и калькулятора билетов -->
       <section class="col-12 col-lg-7">
         <div class="p-4 border rounded shadow-sm bg-white" id="excursion-card">
-          <h2 class="h3 fw-bold mb-4 text-success">Book a Guided Excursion</h2>
+          <h2 class="h3 fw-bold mb-3 text-success">🎟️ Online Excursion Planner</h2>
           
-          <form id="excursion-form">
-            <div class="mb-3">
-              <label for="visitor-name" class="form-label fw-semibold">Full Name:</label>
-              <input type="text" class="form-control" id="visitor-name" name="visitor-name" placeholder="John Doe" required>
-            </div>
+          <form id="excursion-form" novalidate>
+            
+            <!-- Переключатель типа визита -->
+            <div class="mb-4 p-3 bg-light rounded border">
+              <label class="form-label fw-bold d-block mb-2">Visit Type:</label>
+              <div class="btn-group w-100" role="group">
+                <input type="radio" class="btn-check" name="visitType" id="type-individual" value="individual" checked>
+                <label class="btn btn-outline-success" for="type-individual">👤 Individual / Small Group</label>
 
-            <div class="mb-3">
-              <label for="visitor-email" class="form-label fw-semibold">Email Address:</label>
-              <input type="email" class="form-control" id="visitor-email" name="visitor-email" placeholder="example@domain.com" required>
-            </div>
-
-            <div class="mb-3">
-              <label for="visit-date" class="form-label fw-semibold">Preferred Date:</label>
-              <input type="date" class="form-control" id="visit-date" name="visit-date" required>
-            </div>
-
-            <div class="mb-3">
-              <label for="tour-language" class="form-label fw-semibold">Guided Tour Language:</label>
-              <select class="form-select" id="tour-language" name="tour-language">
-                <option value="en">English</option>
-                <option value="kk">Қазақша</option>
-                <option value="ru">Русский</option>
-              </select>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label fw-semibold d-block">Visitor Category:</label>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="cat-student" name="category" value="student">
-                <label class="form-check-label" for="cat-student">Student</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="cat-adult" name="category" value="adult" checked>
-                <label class="form-check-label" for="cat-adult">Adult</label>
-              </div>
-              <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="cat-senior" name="category" value="senior">
-                <label class="form-check-label" for="cat-senior">Senior</label>
+                <input type="radio" class="btn-check" name="visitType" id="type-group" value="group">
+                <label class="btn btn-outline-success" for="type-group">👥 Large Group (10+ People, 40% OFF)</label>
               </div>
             </div>
 
-            <div class="mb-3 hidden" id="student-id-block">
-              <label for="student-card-num" class="form-label fw-semibold">Student Card Number:</label>
-              <input type="text" class="form-control" id="student-card-num" placeholder="Enter ID number">
+            <!-- Данные визитёра с валидацией -->
+            <div class="row g-3 mb-3">
+              <div class="col-12 col-md-6">
+                <label for="visitor-name" class="form-label fw-semibold">Full Name / Representative:</label>
+                <input type="text" class="form-control" id="visitor-name" placeholder="John Doe" required>
+                <div class="invalid-feedback">Please enter your full name.</div>
+              </div>
+              <div class="col-12 col-md-6">
+                <label for="visitor-email" class="form-label fw-semibold">Email Address:</label>
+                <input type="email" class="form-control" id="visitor-email" placeholder="example@domain.com" required>
+                <div class="invalid-feedback">Please provide a valid email address.</div>
+              </div>
             </div>
 
-            <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" id="newsletter" name="newsletter" value="yes">
-              <label class="form-check-label" for="newsletter">Subscribe to museum monthly updates</label>
+            <!-- Поле для организации (в режиме групп) -->
+            <div class="mb-3 d-none" id="group-org-block">
+              <label for="org-name" class="form-label fw-semibold">Organization / School / University Name:</label>
+              <input type="text" class="form-control" id="org-name" placeholder="e.g. School #15 or Astana IT University">
             </div>
 
-            <div class="mb-4">
-              <label for="special-requests" class="form-label fw-semibold">Special Requests / Questions:</label>
-              <textarea class="form-control" id="special-requests" name="special-requests" rows="3" placeholder="Specify group size or accessibility needs..."></textarea>
+            <!-- Smart Visit Calendar: Дата и Выбор слота времени -->
+            <div class="row g-3 mb-4">
+              <div class="col-12 col-md-6">
+                <label for="visit-date" class="form-label fw-semibold">Date of Visit:</label>
+                <input type="date" class="form-control" id="visit-date" required>
+                <div class="invalid-feedback" id="date-validation-msg">Please choose a valid working day (Tue-Sun).</div>
+              </div>
+              <div class="col-12 col-md-6">
+                <label for="visit-time" class="form-label fw-semibold">Time Slot:</label>
+                <select class="form-select" id="visit-time" required>
+                  <option value="" disabled selected>Select date first...</option>
+                </select>
+                <div class="invalid-feedback">Please select a time slot.</div>
+              </div>
+            </div>
+
+            <!-- Блок индивидуальных билетов -->
+            <div class="p-3 bg-light rounded border mb-4" id="calculator-individual">
+              <h5 class="fw-bold mb-3 text-dark">Ticket Selection</h5>
+              
+              <div class="row align-items-center mb-2">
+                <div class="col-7"><span>Adult Ticket <small class="text-muted">(1,000 ₸)</small></span></div>
+                <div class="col-5"><input type="number" class="form-control form-control-sm ticket-qty" id="qty-adult" min="0" value="1"></div>
+              </div>
+
+              <div class="row align-items-center mb-2">
+                <div class="col-7"><span>Student Ticket <small class="text-muted">(500 ₸)</small></span></div>
+                <div class="col-5"><input type="number" class="form-control form-control-sm ticket-qty" id="qty-student" min="0" value="0"></div>
+              </div>
+
+              <div class="row align-items-center mb-3">
+                <div class="col-7"><span>Child / Senior <small class="text-muted">(300 ₸)</small></span></div>
+                <div class="col-5"><input type="number" class="form-control form-control-sm ticket-qty" id="qty-senior" min="0" value="0"></div>
+              </div>
+            </div>
+
+            <!-- Блок групповых билетов -->
+            <div class="p-3 bg-light rounded border mb-4 d-none" id="calculator-group">
+              <h5 class="fw-bold mb-2 text-dark">Group Ticket Counter <span class="badge bg-success">40% OFF</span></h5>
+              <p class="small text-muted mb-3">Special group tariff: 600 ₸ per person (regular adult price is 1,000 ₸).</p>
+              
+              <div class="row align-items-center mb-3">
+                <div class="col-7">
+                  <label for="qty-group-people" class="fw-semibold">Total Visitors in Group:</label>
+                </div>
+                <div class="col-5">
+                  <input type="number" class="form-control" id="qty-group-people" min="10" value="10">
+                </div>
+              </div>
+            </div>
+
+            <!-- Дополнительные услуги -->
+            <div class="p-3 bg-light rounded border mb-4">
+              <h6 class="fw-bold mb-2">Additional Services</h6>
+              <div class="form-check mb-2">
+                <input class="form-check-input extra-service" type="checkbox" id="add-guide" value="2000">
+                <label class="form-check-label" for="add-guide">Personal Tour Guide (+2,000 ₸)</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input extra-service" type="checkbox" id="add-photo" value="500">
+                <label class="form-check-label" for="add-photo">Photo Pass (+500 ₸)</label>
+              </div>
+            </div>
+
+            <!-- Detailed Price Breakdown (Подробная детализация чека) -->
+            <div class="p-3 bg-light border rounded mb-4">
+              <h6 class="fw-bold text-dark mb-2 border-bottom pb-2">🧾 Detailed Price Breakdown</h6>
+              <div id="price-breakdown-list" class="small text-secondary mb-3">
+                <!-- Заполняется динамически из JS -->
+              </div>
+              <div class="d-flex justify-content-between align-items-center p-2 bg-success text-white rounded">
+                <span class="fw-bold">Total Estimated Price:</span>
+                <span class="fs-5 fw-bold" id="total-price-display">1,000 ₸</span>
+              </div>
             </div>
 
             <div class="d-flex gap-2 flex-wrap">
-              <button type="submit" class="btn btn-success btn-lg" id="btn-submit-excursion">Submit Request</button>
-              <button type="reset" class="btn btn-outline-secondary" id="btn-reset-excursion">Clear Form</button>
+              <button type="submit" class="btn btn-success btn-lg flex-grow-1" id="btn-submit-excursion">Preview Booking</button>
+              <button type="reset" class="btn btn-outline-secondary" id="btn-reset-excursion">Reset</button>
             </div>
           </form>
 
-          <div id="excursion-response-area" class="mt-4 p-3 rounded hidden"></div>
         </div>
       </section>
 
+      <!-- Правая колонка: Отзывы и прайс-справка -->
       <section class="col-12 col-lg-5">
+        
+        <!-- Visitor Feedback с категориями -->
         <div class="p-4 border rounded shadow-sm bg-white mb-4" id="review-card">
-          <h2 class="h3 fw-bold mb-4 text-success">Visitor Feedback</h2>
-          <form id="feedback-form">
+          <h2 class="h3 fw-bold mb-3 text-success">Visitor Feedback</h2>
+          <form id="feedback-form" novalidate>
             
+            <!-- Оценка звёздами -->
             <div class="mb-3">
-              <label class="form-label fw-semibold d-block">Museum Rating:</label>
+              <label class="form-label fw-semibold d-block">Overall Rating:</label>
               <div class="rating-stars" id="rating-container">
                 <span class="fs-4 text-warning" style="cursor:pointer;" id="star-1">⭐</span>
                 <span class="fs-4 text-warning" style="cursor:pointer;" id="star-2">⭐</span>
@@ -131,29 +202,101 @@
               </div>
             </div>
 
+            <!-- Review Categories (Категории отзыва) -->
             <div class="mb-3">
-              <div class="d-flex justify-content-between align-items-center">
-                <label for="feedback-text" class="form-label fw-semibold">Your Feedback:</label>
-                <small class="text-muted" id="char-counter">0 / 500</small>
+              <label class="form-label fw-semibold d-block mb-2">Aspect Evaluated:</label>
+              <div class="d-flex flex-wrap gap-2" id="review-categories">
+                <button type="button" class="btn btn-sm btn-outline-success active" data-cat="Exhibits">🏛️ Exhibits</button>
+                <button type="button" class="btn btn-sm btn-outline-success" data-cat="Guided Tour">🎤 Guided Tour</button>
+                <button type="button" class="btn btn-sm btn-outline-success" data-cat="Staff">👨‍💼 Staff</button>
+                <button type="button" class="btn btn-sm btn-outline-success" data-cat="Atmosphere">✨ Atmosphere</button>
               </div>
-              <textarea class="form-control" id="feedback-text" name="feedback-text" rows="4" maxlength="500" required></textarea>
             </div>
 
-            <button type="submit" class="btn btn-outline-success btn-sm" id="btn-submit-feedback">Send Review</button>
+            <div class="mb-3">
+              <div class="d-flex justify-content-between align-items-center">
+                <label for="feedback-text" class="form-label fw-semibold">Your Review:</label>
+                <small class="text-muted" id="char-counter">0 / 500</small>
+              </div>
+              <textarea class="form-control" id="feedback-text" name="feedback-text" rows="4" maxlength="500" required placeholder="Share your impression of the museum..."></textarea>
+              <div class="invalid-feedback">Please write a brief comment before submitting.</div>
+            </div>
+
+            <button type="submit" class="btn btn-outline-success btn-sm w-100" id="btn-submit-feedback">Send Review</button>
           </form>
-          
-          <div id="feedback-response-area" class="mt-3 p-3 rounded hidden"></div>
+
+          <div id="feedback-response-area" class="mt-3 p-3 rounded d-none"></div>
         </div>
 
-        <div class="p-4 border rounded bg-light" id="booking-status-card">
-          <h3 class="h5 fw-bold mb-2">Group Booking Status</h3>
-          <p class="small text-muted mb-3">Group bookings for weekends are currently full.</p>
-          <button type="button" class="btn btn-secondary disabled" aria-disabled="true" id="btn-closed-slots">Weekend Slots Closed</button>
+        <!-- Часы работы музея -->
+        <div class="p-4 border rounded bg-light shadow-sm" id="museum-hours-card">
+          <h3 class="h5 fw-bold mb-3">🕒 Museum Working Hours</h3>
+          <ul class="list-unstyled mb-0 small text-secondary">
+            <li class="mb-2 d-flex justify-content-between">
+              <span><strong>Tue - Fri:</strong></span>
+              <span>10:00 AM – 06:00 PM</span>
+            </li>
+            <li class="mb-2 d-flex justify-content-between">
+              <span><strong>Sat - Sun:</strong></span>
+              <span>10:00 AM – 05:00 PM</span>
+            </li>
+            <li class="d-flex justify-content-between text-danger fw-bold">
+              <span><strong>Monday:</strong></span>
+              <span>Day Off (Closed)</span>
+            </li>
+          </ul>
         </div>
       </section>
 
     </div>
   </main>
+
+  <!-- BOOKING PREVIEW MODAL (Проверка заявки перед демо-отправкой) -->
+  <div class="modal fade" id="bookingPreviewModal" tabindex="-1" aria-labelledby="bookingPreviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 shadow-lg">
+        <div class="modal-header bg-brand text-white border-bottom border-warning border-2">
+          <h5 class="modal-title fw-bold" id="bookingPreviewModalLabel">🔍 Review Your Booking Details</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="alert alert-warning mb-4 py-2 small">
+            ℹ️ <strong>Demo Excursion Request:</strong> Please verify your selected date, time slot, and ticket details before submitting.
+          </div>
+
+          <div class="row g-3 small">
+            <div class="col-12 col-md-6">
+              <strong>Visitor Name:</strong> <span id="prev-name" class="text-dark"></span>
+            </div>
+            <div class="col-12 col-md-6">
+              <strong>Email:</strong> <span id="prev-email" class="text-dark"></span>
+            </div>
+            <div class="col-12 col-md-6">
+              <strong>Visit Date & Time:</strong> <span id="prev-datetime" class="text-success fw-bold"></span>
+            </div>
+            <div class="col-12 col-md-6">
+              <strong>Visit Type:</strong> <span id="prev-type" class="badge bg-secondary"></span>
+            </div>
+          </div>
+
+          <hr class="my-3">
+
+          <h6 class="fw-bold mb-2">Order Breakdown:</h6>
+          <div id="prev-breakdown" class="p-3 bg-light rounded border small mb-3"></div>
+
+          <div class="d-flex justify-content-between align-items-center p-3 bg-success text-white rounded">
+            <span class="fw-bold">Total Price:</span>
+            <span class="fs-5 fw-bold" id="prev-total"></span>
+          </div>
+        </div>
+
+        <div class="modal-footer bg-light">
+          <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Edit Booking</button>
+          <button type="button" class="btn btn-success btn-sm" id="btn-confirm-demo-submit">Submit Demo Request</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <footer class="bg-brand text-white pt-4 pb-3 mt-auto" id="main-footer">
     <div class="container">
@@ -179,5 +322,6 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/main.js" defer></script>
 </body>
 </html>
