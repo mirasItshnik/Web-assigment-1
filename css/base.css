@@ -1,26 +1,57 @@
+/* ==========================================================================
+   base.css — Saken Seifullin Museum
+   1. Tokens          4. Components (tables, cards, buttons)
+   2. Layout          5. Interactive widgets (toast, hotspots, receipt...)
+   3. Navigation      6. Dark theme + accessibility
+   ========================================================================== */
+
+/* ---------- 1. Tokens ---------- */
 :root {
   --brand-green: #0A372F;
+  --brand-green-soft: #14524A;
   --brand-gold: #C9A646;
+  --gold-ink: #7A5F12;               /* gold dark enough for text on light backgrounds */
   --brand-light-bg: #EEF3F0;
+  --page-bg: #F6F8F6;
+  --line: rgba(10, 55, 47, .14);
 }
 
+[data-bs-theme="dark"] {
+  --brand-light-bg: #17231F;
+  --page-bg: #0E1714;
+  --line: rgba(201, 166, 70, .24);
+}
+
+/* ---------- 2. Layout ---------- */
 body {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background-color: var(--page-bg);
 }
 
-main {
-  flex: 1 0 auto;
-}
+main { flex: 1 0 auto; }
 
-.bg-brand {
-  background-color: var(--brand-green) !important;
-}
+.bg-brand { background-color: var(--brand-green) !important; }
 
-h1, h2, h3, .navbar-brand {
-  font-family: Georgia, "Times New Roman", serif;
+h1, h2, h3, .navbar-brand { font-family: Georgia, "Times New Roman", serif; }
+
+main h2.display-6 {
+  position: relative;
+  border-bottom: 1px solid var(--line) !important;
+}
+main h2.display-6::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 72px;
+  height: 3px;
+  background: var(--brand-gold);
+}
+@media (max-width: 767.98px) {
+  main h2.display-6::after { left: 50%; transform: translateX(-50%); }
 }
 
 .poetry-quote-box {
@@ -28,15 +59,213 @@ h1, h2, h3, .navbar-brand {
   border-left: 4px solid var(--brand-gold);
 }
 
-.card-img-top, .figure-img {
-  transition: transform 0.3s ease;
+#main-footer { border-top: 3px solid var(--brand-gold); }
+
+/* ---------- 3. Navigation ---------- */
+.navbar .nav-link { transition: color .2s, box-shadow .2s; }
+.navbar .nav-link:hover,
+.navbar .nav-link:focus-visible { color: var(--brand-gold); }
+.navbar .nav-link.active {
+  color: var(--brand-gold) !important;
+  box-shadow: inset 0 -2px 0 var(--brand-gold);
 }
 
+/* ---------- 4. Components ---------- */
+.card, .figure { overflow: hidden; }
+.card {
+  border: 1px solid var(--line) !important;
+  border-radius: .5rem;
+  transition: border-color .2s, box-shadow .2s;
+}
+.card:hover { border-color: var(--brand-gold) !important; }
+.card-img-top, .figure-img { transition: transform .3s ease; }
 .card:hover .card-img-top,
-.figure:hover .figure-img {
-  transform: scale(1.03);
+.figure:hover .figure-img { transform: scale(1.03); }
+
+.btn-success {
+  --bs-btn-bg: var(--brand-green);
+  --bs-btn-border-color: var(--brand-green);
+  --bs-btn-hover-bg: var(--brand-green-soft);
+  --bs-btn-hover-border-color: var(--brand-green-soft);
+  --bs-btn-active-bg: var(--brand-green-soft);
+  --bs-btn-active-border-color: var(--brand-green-soft);
+  --bs-btn-disabled-bg: var(--brand-green);
+  --bs-btn-disabled-border-color: var(--brand-green);
+}
+.btn-outline-success {
+  --bs-btn-color: var(--brand-green);
+  --bs-btn-border-color: var(--brand-green);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: var(--brand-green);
+  --bs-btn-hover-border-color: var(--brand-green);
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: var(--brand-green);
+  --bs-btn-active-border-color: var(--brand-green);
+}
+.btn-gold-outline {
+  --bs-btn-color: var(--gold-ink);
+  --bs-btn-border-color: var(--brand-gold);
+  --bs-btn-hover-color: #1b1503;
+  --bs-btn-hover-bg: var(--brand-gold);
+  --bs-btn-hover-border-color: var(--brand-gold);
+  --bs-btn-active-color: #1b1503;
+  --bs-btn-active-bg: var(--brand-gold);
+  --bs-btn-active-border-color: var(--brand-gold);
+}
+.bg-success { background-color: var(--brand-green) !important; }
+.text-success { color: var(--brand-green) !important; }
+
+/* Tables */
+.table thead.table-dark {
+  --bs-table-bg: var(--brand-green);
+  --bs-table-border-color: var(--brand-gold);
+}
+.table thead th {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 600;
+  border-bottom: 2px solid var(--brand-gold);
+}
+.table-hover > tbody > tr:hover > * { --bs-table-bg-state: rgba(201, 166, 70, .18); }
+tbody tr[data-bs-toggle="modal"],
+#exhibits-cards-grid .card { cursor: pointer; }
+
+/* ---------- 5. Interactive widgets ---------- */
+.museum-toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translate(-50%, 20px);
+  max-width: min(92vw, 520px);
+  padding: .75rem 1.25rem;
+  border-radius: .5rem;
+  border-left: 4px solid var(--brand-gold);
+  background: var(--brand-green);
+  color: #fff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .3);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+  transition: opacity .3s, transform .3s;
+}
+.museum-toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 0;
+  background: var(--brand-gold);
+  z-index: 2000;
+}
+.to-top {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 46px;
+  height: 46px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--brand-green);
+  color: var(--brand-gold);
+  font-size: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, .3);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .25s, visibility .25s;
+  z-index: 1500;
+  cursor: pointer;
+}
+.to-top.show { opacity: 1; visibility: visible; }
+
+/* Gallery lightbox: hotspots */
+#lightbox-img-wrapper { transition: transform .25s ease; }
+#lightbox-img-wrapper.dragging { transition: none; }
+#lightbox-img-wrapper.zoomed #lightbox-img { cursor: grab; }
+#hotspots-container { position: absolute; inset: 0; }
+.hotspot {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  background-color: var(--brand-gold);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 8px rgba(0, 0, 0, .6);
+  transition: transform .2s ease, background-color .2s ease;
+}
+.hotspot::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 2px solid var(--brand-gold);
+  border-radius: 50%;
+  animation: hotspot-pulse 1.8s infinite;
+  opacity: .8;
+}
+.hotspot:hover,
+.hotspot.active {
+  transform: translate(-50%, -50%) scale(1.3);
+  background-color: var(--brand-green);
+}
+@keyframes hotspot-pulse {
+  0%   { transform: scale(.9);  opacity: .9; }
+  100% { transform: scale(1.8); opacity: 0; }
 }
 
-.card, .figure {
-  overflow: hidden;
+/* Booking: receipt-style price breakdown */
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: .3rem 0;
+  border-bottom: 1px dashed var(--line);
+}
+.receipt-row:last-child { border-bottom: 0; }
+.receipt-row span:last-child { white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--bs-body-color); }
+.receipt-saved { margin-top: .5rem; color: var(--brand-green); font-weight: 600; }
+
+/* Feedback: star rating */
+.rating-stars span { display: inline-block; transition: opacity .15s, transform .15s, filter .15s; }
+.rating-stars span.off { opacity: .3; filter: grayscale(1); }
+.rating-stars span.on { transform: scale(1.12); }
+
+/* Working hours: highlight today */
+.is-today {
+  background: rgba(201, 166, 70, .2);
+  border-radius: .25rem;
+  padding: .35rem .5rem;
+  margin-inline: -.5rem;
+}
+
+/* ---------- 6. Dark theme + accessibility ---------- */
+[data-bs-theme="dark"] .bg-white { background-color: var(--bs-body-bg) !important; }
+[data-bs-theme="dark"] .bg-light:not(.badge) { background-color: var(--bs-tertiary-bg) !important; }
+[data-bs-theme="dark"] .text-dark:not(.badge) { color: var(--bs-body-color) !important; }
+[data-bs-theme="dark"] .text-success { color: #8FD1B8 !important; }
+[data-bs-theme="dark"] .btn-success { --bs-btn-bg: var(--brand-green-soft); --bs-btn-border-color: var(--brand-gold); }
+[data-bs-theme="dark"] .btn-outline-success {
+  --bs-btn-color: #8FD1B8;
+  --bs-btn-border-color: #8FD1B8;
+  --bs-btn-hover-color: #06201B;
+  --bs-btn-hover-bg: #8FD1B8;
+  --bs-btn-active-color: #06201B;
+  --bs-btn-active-bg: #8FD1B8;
+}
+[data-bs-theme="dark"] .btn-outline-dark {
+  --bs-btn-color: #E9ECEF;
+  --bs-btn-border-color: #ADB5BD;
+  --bs-btn-hover-color: #111;
+  --bs-btn-hover-bg: #E9ECEF;
+}
+[data-bs-theme="dark"] .btn-gold-outline { --bs-btn-color: var(--brand-gold); }
+[data-bs-theme="dark"] .receipt-saved { color: #8FD1B8; }
+
+:focus-visible { outline: 3px solid var(--brand-gold); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
 }

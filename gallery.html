@@ -8,42 +8,6 @@
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="./style1.css">
   <title>Gallery Tour - Saken Seifullin Museum</title>
-  <style>
-    /* Пульсирующие золотые интерактивные точки (Hotspots) */
-    .hotspot {
-      position: absolute;
-      width: 18px;
-      height: 18px;
-      background-color: #d4af37;
-      border: 2px solid #ffffff;
-      border-radius: 50%;
-      cursor: pointer;
-      z-index: 10;
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 8px rgba(0,0,0,0.6);
-      transition: transform 0.2s ease, background-color 0.2s ease;
-    }
-    .hotspot::after {
-      content: '';
-      position: absolute;
-      top: -4px;
-      left: -4px;
-      right: -4px;
-      bottom: -4px;
-      border: 2px solid #d4af37;
-      border-radius: 50%;
-      animation: hotspot-pulse 1.8s infinite;
-      opacity: 0.8;
-    }
-    .hotspot:hover {
-      transform: translate(-50%, -50%) scale(1.3);
-      background-color: #1b4332;
-    }
-    @keyframes hotspot-pulse {
-      0% { transform: scale(0.9); opacity: 0.9; }
-      100% { transform: scale(1.8); opacity: 0; }
-    }
-  </style>
 </head>
 <body class="d-flex flex-column min-vh-100" id="gallery-body">
 
@@ -69,7 +33,7 @@
             <li class="nav-item"><a class="nav-link" href="exhibitions.html">Exhibitions</a></li>
             <li class="nav-item"><a class="nav-link" href="exhibits.html">Collection</a></li>
             <li class="nav-item"><a class="nav-link active" href="gallery.html">Gallery</a></li>
-            <li class="nav-item"><a class="nav-link" href="feedback.html">Visit & Feedback</a></li>
+            <li class="nav-item"><a class="nav-link" href="feedback.html">Visit &amp; Feedback</a></li>
             <li class="nav-item"><a class="nav-link" href="contacts.html">Contacts</a></li>
             <li class="nav-item"><a class="nav-link" href="Museum history.html">Museum history</a></li>
             <li class="nav-item"><a class="nav-link" href="poetry.html">Poetry Wall</a></li>
@@ -96,11 +60,9 @@
       <h2 class="display-6 fw-bold border-bottom pb-2 text-center text-md-start">Visual Tour of the Museum Halls</h2>
       <p class="lead text-muted text-center text-md-start mb-4">Click on any photograph to launch the Interactive Museum Viewer with Hotspots &amp; Details.</p>
       
-      <!-- Панель управления (Тёмная тема, Размер шрифта, Факт дня, Счётчик) -->
+      <!-- Панель управления -->
       <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4 p-3 rounded border bg-light shadow-sm" id="gallery-controls">
-        
         <div class="d-flex gap-2 align-items-center">
-          <button type="button" class="btn btn-outline-dark btn-sm" id="btn-toggle-theme">🌙 Dark Mode</button>
           <div class="btn-group btn-group-sm" role="group" aria-label="Font Size">
             <button type="button" class="btn btn-outline-secondary" id="btn-font-decrease">A-</button>
             <button type="button" class="btn btn-outline-secondary" id="btn-font-reset">A</button>
@@ -109,12 +71,12 @@
         </div>
 
         <div class="d-flex gap-2 align-items-center ms-auto">
-          <button type="button" class="btn btn-outline-warning text-dark btn-sm" id="btn-fact-of-day">💡 Fact of the Day</button>
+          <button type="button" class="btn btn-gold-outline btn-sm" id="btn-fact-of-day">💡 Fact of the Day</button>
           <span class="badge bg-secondary p-2" id="photo-counter">Photo 1 of 3</span>
         </div>
       </div>
 
-      <!-- Контейнер под "Факт дня" -->
+      <!-- Контейнер "Fact of the Day" -->
       <div id="fact-container" class="alert alert-warning d-none mb-4 shadow-sm"></div>
 
       <!-- Carousel / Слайдер -->
@@ -159,11 +121,10 @@
 
       <!-- Сетка фото-карточек -->
       <div class="row g-4 align-items-stretch mb-4" id="gallery-cards-grid">
-        
         <div class="col-12 col-md-4 gallery-card-col" data-index="0">
-          <div class="card h-100 shadow-sm border-0 position-relative overflow-hidden gallery-card">
+          <div class="card h-100 shadow-sm border-0 position-relative overflow-hidden gallery-card" style="cursor: pointer;">
             <span class="position-absolute top-0 start-0 badge bg-dark m-2 p-2 opacity-75 z-1">Interior</span>
-            <img src="Museum inner view.jpeg" class="card-img-top object-fit-cover gallery-img-click" style="height: 250px; cursor: pointer; transition: transform 0.3s ease;" alt="Museum Inner View">
+            <img src="Museum inner view.jpeg" class="card-img-top object-fit-cover gallery-img-click" style="height: 250px;" alt="Museum Inner View">
             <div class="card-body d-flex flex-column">
               <h5 class="card-title text-success fs-6">Museum Inner View</h5>
               <p class="card-text text-muted small mb-0">Traditional furniture creating an authentic historical atmosphere.</p>
@@ -172,9 +133,9 @@
         </div>
 
         <div class="col-12 col-md-4 gallery-card-col" data-index="1">
-          <div class="card h-100 shadow-sm border-0 position-relative overflow-hidden gallery-card">
+          <div class="card h-100 shadow-sm border-0 position-relative overflow-hidden gallery-card" style="cursor: pointer;">
             <span class="position-absolute top-0 start-0 badge bg-dark m-2 p-2 opacity-75 z-1">Personal Items</span>
-            <img src="Personal belongings.jpg" class="card-img-top object-fit-cover gallery-img-click" style="height: 250px; cursor: pointer; transition: transform 0.3s ease;" alt="Personal Belongings">
+            <img src="Personal belongings.jpg" class="card-img-top object-fit-cover gallery-img-click" style="height: 250px;" alt="Personal Belongings">
             <div class="card-body d-flex flex-column">
               <h5 class="card-title text-success fs-6">Personal Belongings</h5>
               <p class="card-text text-muted small mb-0">Clock, dishes, and personal items preserved in showcases.</p>
@@ -183,99 +144,63 @@
         </div>
 
         <div class="col-12 col-md-4 gallery-card-col" data-index="2">
-          <div class="card h-100 shadow-sm border-0 position-relative overflow-hidden gallery-card">
+          <div class="card h-100 shadow-sm border-0 position-relative overflow-hidden gallery-card" style="cursor: pointer;">
             <span class="position-absolute top-0 start-0 badge bg-dark m-2 p-2 opacity-75 z-1">Attire</span>
-            <img src="Saken s suit.png" class="card-img-top object-fit-cover gallery-img-click" style="height: 250px; cursor: pointer; transition: transform 0.3s ease;" alt="Authentic Suit">
+            <img src="Saken s suit.png" class="card-img-top object-fit-cover gallery-img-click" style="height: 250px;" alt="Authentic Suit">
             <div class="card-body d-flex flex-column">
               <h5 class="card-title text-success fs-6">Authentic Suit</h5>
               <p class="card-text text-muted small mb-0">Suit displayed in a showcase reflecting early 20th-century fashion.</p>
             </div>
           </div>
         </div>
-
       </div>
-
-      <div class="poetry-quote-box p-4 rounded shadow-sm border-start border-4 border-warning mt-4">
-        <p class="fst-italic text-secondary mb-0">
-          The collection presented in these halls provides visitors with a unique opportunity to immerse themselves in the atmosphere of the 20th century. Every item, from the personal manuscripts to the preserved furniture, honors the cultural legacy of Saken Seifullin.
-        </p>
-      </div>
-
     </section>
-  </main>
 
-  <!-- ИНТЕРАКТИВНЫЙ МУЗЕЙНЫЙ LIGHTBOX: Zoom + Interactive Hotspots + Information Panel -->
-  <div class="modal fade" id="lightboxModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-      <div class="modal-content bg-dark text-white border-0 shadow-lg">
-        
-        <!-- Шапка Lightbox с панелью Zoom -->
-        <div class="modal-header border-bottom border-secondary py-2">
-          <h5 class="modal-title h6 text-warning d-flex align-items-center gap-2 mb-0" id="lightbox-title">
-            <span>🏛️ Interactive Photo Tour</span>
-          </h5>
-          
-          <div class="d-flex align-items-center gap-3 ms-auto me-3">
-            <small class="text-white-50 d-none d-sm-inline">Photo Zoom:</small>
-            <div class="btn-group btn-group-sm" role="group">
-              <button type="button" class="btn btn-outline-light" id="btn-gallery-zoom-out">-</button>
-              <button type="button" class="btn btn-outline-secondary text-white" id="btn-gallery-zoom-reset">100%</button>
-              <button type="button" class="btn btn-outline-light" id="btn-gallery-zoom-in">+</button>
-            </div>
+    <!-- МОДАЛЬНОЕ ОКНО LIGHTBOX (ХОТСПОТЫ + ЗУМ) -->
+    <div class="modal fade" id="lightboxModal" tabindex="-1" aria-labelledby="lightboxModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+          <div class="modal-header bg-brand text-white">
+            <h5 class="modal-title fw-bold" id="lightboxModalLabel">Interactive Museum Photo Viewer</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+          <div class="modal-body p-0 bg-dark text-white position-relative">
+            <div class="row g-0">
+              <div class="col-12 col-lg-8 position-relative overflow-hidden text-center bg-black d-flex align-items-center justify-content-center" style="min-height: 400px;">
+                <div id="lightbox-img-wrapper" class="position-relative w-100 h-100 d-flex align-items-center justify-content-center">
+                  <img id="lightbox-img" src="" class="img-fluid object-fit-contain" style="max-height: 500px;" alt="Enlarged view">
+                  <div id="hotspots-container" class="position-absolute top-0 start-0 w-100 h-100"></div>
+                </div>
+                
+                <!-- Кнопки управления зумом -->
+                <div class="position-absolute bottom-0 start-0 m-3 btn-group btn-group-sm z-3">
+                  <button type="button" class="btn btn-dark border-secondary" id="btn-gallery-zoom-out">-</button>
+                  <button type="button" class="btn btn-dark border-secondary" id="btn-gallery-zoom-reset">100%</button>
+                  <button type="button" class="btn btn-dark border-secondary" id="btn-gallery-zoom-in">+</button>
+                </div>
 
-          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-
-        <!-- Тело Lightbox: Фотография с Hotspots слева + Панель информации справа -->
-        <div class="modal-body p-0">
-          <div class="row g-0">
-            
-            <!-- Левая часть: Интерактивное фото и точки -->
-            <div class="col-12 col-lg-8 position-relative bg-black d-flex align-items-center justify-content-center" style="min-height: 420px; max-height: 70vh; overflow: hidden;">
-              
-              <!-- Область вывода фото и меток -->
-              <div id="lightbox-img-wrapper" class="position-relative d-inline-block" style="transition: transform 0.25s ease;">
-                <img src="" id="lightbox-img" class="img-fluid" style="max-height: 65vh; object-fit: contain;" alt="Full Preview">
-                <!-- Сюда JS динамически внедряет золотые точки (Hotspots) -->
-                <div id="hotspots-container"></div>
+                <!-- Кнопки перелистывания -->
+                <button type="button" class="btn btn-dark position-absolute top-50 start-0 translate-middle-y m-2 rounded-circle" id="btn-lightbox-prev" aria-label="Previous image">❮</button>
+                <button type="button" class="btn btn-dark position-absolute top-50 end-0 translate-middle-y m-2 rounded-circle" id="btn-lightbox-next" aria-label="Next image">❯</button>
               </div>
 
-              <!-- Стрелки прокрутки Previous / Next -->
-              <button type="button" class="btn btn-outline-light rounded-circle p-2 position-absolute start-0 top-50 translate-middle-y ms-2 opacity-75" id="btn-lightbox-prev">❮</button>
-              <button type="button" class="btn btn-outline-light rounded-circle p-2 position-absolute end-0 top-50 translate-middle-y me-2 opacity-75" id="btn-lightbox-next">❯</button>
-            </div>
-
-            <!-- Правая часть: Photo Information Panel (Информационная панель) -->
-            <div class="col-12 col-lg-4 p-4 bg-dark text-light d-flex flex-column border-start border-secondary" id="lightbox-info-panel">
-              <span class="badge bg-warning text-dark align-self-start mb-2" id="lightbox-tag">Museum Hall</span>
-              <h4 class="h5 fw-bold text-success mb-2" id="lightbox-card-title">Title</h4>
-              <p class="small text-white-50 mb-3" id="lightbox-desc">Detailed historical description will appear here.</p>
-
-              <hr class="border-secondary my-2">
-
-              <!-- Раздел описания выбранной Hotspot точки -->
-              <div class="p-3 bg-secondary bg-opacity-25 rounded border border-secondary mt-2 mb-3">
-                <h6 class="fw-bold text-warning small mb-1" id="hotspot-focus-title">📍 Interactive Hotspots</h6>
-                <p class="small text-white-50 mb-0" id="hotspot-focus-desc">
-                  Hover or click on any pulsing gold marker on the photograph to inspect highlighted artifacts.
-                </p>
-              </div>
-
-              <div class="mt-auto pt-2 border-top border-secondary text-white-50 small">
-                <div class="d-flex justify-content-between">
-                  <span>Museum Location:</span>
-                  <strong class="text-light">Hall #2 Archive</strong>
+              <!-- Боковая инфо-панель -->
+              <div class="col-12 col-lg-4 p-4 bg-dark text-light d-flex flex-column border-start border-secondary">
+                <span class="badge bg-warning text-dark align-self-start mb-2" id="lightbox-tag">Interior</span>
+                <h4 class="h5 fw-bold text-warning" id="lightbox-card-title">Museum Photo</h4>
+                <p class="small text-muted mb-3" id="lightbox-desc">Description of the selected photo.</p>
+                <hr class="border-secondary">
+                <div class="mt-auto">
+                  <h6 class="fw-bold text-gold mb-1" id="hotspot-focus-title">📍 Interactive Hotspots</h6>
+                  <p class="small text-secondary mb-0" id="hotspot-focus-desc">Hover or click on any pulsing marker on the photograph to inspect highlighted details.</p>
                 </div>
               </div>
             </div>
-
           </div>
         </div>
-
       </div>
     </div>
-  </div>
+  </main>
 
   <footer class="bg-brand text-white pt-4 pb-3 mt-auto" id="main-footer">
     <div class="container">

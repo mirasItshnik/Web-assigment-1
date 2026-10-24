@@ -150,11 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const cat = btn.getAttribute('data-category');
         poemCols.forEach(col => {
-          if (cat === 'all' || col.getAttribute('data-category') === cat) {
-            col.style.display = 'block';
-          } else {
-            col.style.display = 'none';
-          }
+          col.style.display = (cat === 'all' || col.getAttribute('data-category') === cat) ? 'block' : 'none';
         });
       });
     });
@@ -198,7 +194,133 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // 4. Museum History (Анимация чисел)
+  // 4. Exhibits Search & Filter & Modal
+  const exhibitTriggers = document.querySelectorAll('.exhibit-modal-trigger');
+  if (exhibitTriggers.length > 0) {
+    exhibitTriggers.forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        document.getElementById('exhibitModalTitle').innerText = trigger.getAttribute('data-title') || '';
+        document.getElementById('exhibitModalInv').innerText = trigger.getAttribute('data-inv') || '';
+        document.getElementById('exhibitModalYear').innerText = `Year: ${trigger.getAttribute('data-year') || ''}`;
+        document.getElementById('exhibitModalDesc').innerText = trigger.getAttribute('data-desc') || '';
+      });
+    });
+
+    const exFilterBtns = document.querySelectorAll('.filter-exhibit-btn');
+    const exCols = document.querySelectorAll('.exhibit-card-col');
+
+    exFilterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        exFilterBtns.forEach(b => {
+          b.classList.remove('btn-success', 'active');
+          b.classList.add('btn-outline-success');
+        });
+        btn.classList.remove('btn-outline-success');
+        btn.classList.add('btn-success', 'active');
+
+        const cat = btn.getAttribute('data-category');
+        exCols.forEach(col => {
+          col.style.display = (cat === 'all' || col.getAttribute('data-category') === cat) ? 'block' : 'none';
+        });
+      });
+    });
+
+    const exSearchInput = document.getElementById('exhibit-search');
+    if (exSearchInput) {
+      exSearchInput.addEventListener('input', (e) => {
+        const val = e.target.value.toLowerCase().trim();
+        exCols.forEach(col => {
+          col.style.display = col.innerText.toLowerCase().includes(val) ? 'block' : 'none';
+        });
+      });
+    }
+  }
+
+  // 5. Gallery Filter & Lightbox
+  const galleryTriggers = document.querySelectorAll('.gallery-lightbox-trigger');
+  if (galleryTriggers.length > 0) {
+    galleryTriggers.forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        document.getElementById('lightbox-img').src = trigger.getAttribute('data-img') || '';
+        document.getElementById('lightbox-caption').innerText = trigger.getAttribute('data-caption') || '';
+      });
+    });
+
+    const gFilterBtns = document.querySelectorAll('.filter-gallery-btn');
+    const gCols = document.querySelectorAll('.gallery-card-col');
+
+    gFilterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        gFilterBtns.forEach(b => {
+          b.classList.remove('btn-success', 'active');
+          b.classList.add('btn-outline-success');
+        });
+        btn.classList.remove('btn-outline-success');
+        btn.classList.add('btn-success', 'active');
+
+        const cat = btn.getAttribute('data-category');
+        gCols.forEach(col => {
+          col.style.display = (cat === 'all' || col.getAttribute('data-category') === cat) ? 'block' : 'none';
+        });
+      });
+    });
+  }
+
+  // 6. Feedback Page Ticket Calculator & Booking & Reviews
+  const adultInput = document.getElementById('adult-tickets');
+  const studentInput = document.getElementById('student-tickets');
+  const totalPriceDisplay = document.getElementById('total-price-display');
+
+  if (adultInput && studentInput && totalPriceDisplay) {
+    const calculateTotal = () => {
+      const adults = parseInt(adultInput.value) || 0;
+      const students = parseInt(studentInput.value) || 0;
+      const total = (adults * 1000) + (students * 500);
+      totalPriceDisplay.innerText = `${total} KZT`;
+    };
+
+    adultInput.addEventListener('input', calculateTotal);
+    studentInput.addEventListener('input', calculateTotal);
+  }
+
+  const bookingForm = document.getElementById('booking-form');
+  if (bookingForm) {
+    bookingForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      showToast('✅ Tour reservation successfully booked!');
+      bookingForm.reset();
+    });
+  }
+
+  const reviewForm = document.getElementById('review-form');
+  const reviewsFeed = document.getElementById('reviews-feed');
+
+  if (reviewForm && reviewsFeed) {
+    reviewForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('review-name').value.trim();
+      const rating = document.getElementById('review-rating').value;
+      const text = document.getElementById('review-text').value.trim();
+
+      const stars = '⭐'.repeat(parseInt(rating));
+
+      const reviewCard = document.createElement('div');
+      reviewCard.className = 'card border-0 shadow-sm p-3 bg-white';
+      reviewCard.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center mb-1">
+          <strong class="text-dark">${name}</strong>
+          <span class="text-warning small">${stars}</span>
+        </div>
+        <p class="text-secondary small mb-0">"${text}"</p>
+      `;
+
+      reviewsFeed.prepend(reviewCard);
+      showToast('Thank you! Review published.');
+      reviewForm.reset();
+    });
+  }
+
+  // 7. Museum History (Анимация чисел)
   const animatedElements = document.querySelectorAll('.display-6');
   if (animatedElements.length > 0) {
     const startCounter = (el) => {
@@ -237,20 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
     animatedElements.forEach(el => observer.observe(el));
   }
 
-  // 5. Smooth scroll
-  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-      const targetId = this.getAttribute('href');
-      if (targetId === '#') return;
-      const targetElement = document.querySelector(targetId);
-      if (targetElement) {
-        e.preventDefault();
-        targetElement.scrollIntoView({ behavior: 'smooth' });
-      }
-    });
-  });
-
-  // 6. Contacts (Статус работы)
+  // 8. Contacts Status Badge
   const statusBadge = document.getElementById('museum-status-badge');
   if (statusBadge) {
     const now = new Date();
@@ -280,28 +389,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Аккордеон
-  const accordionButtons = document.querySelectorAll('#faqAccordion .accordion-button');
-  if (accordionButtons.length > 0) {
-    accordionButtons.forEach((btn, index) => {
-      btn.addEventListener('click', () => {
-        localStorage.setItem('activeFaqIndex', index);
-      });
-    });
-
-    const savedFaqIndex = localStorage.getItem('activeFaqIndex');
-    if (savedFaqIndex !== null && accordionButtons[savedFaqIndex]) {
-      const targetCollapse = document.querySelector(accordionButtons[savedFaqIndex].getAttribute('data-bs-target'));
-      if (targetCollapse && window.bootstrap) {
-        const bsCollapse = new bootstrap.Collapse(targetCollapse, { toggle: false });
-        bsCollapse.show();
-      }
-    }
-  }
-
 });
 
-// Toast
+// Toast Notification
 function showToast(message) {
   let toast = document.getElementById('custom-toast');
   if (!toast) {
