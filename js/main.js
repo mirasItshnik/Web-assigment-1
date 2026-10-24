@@ -1,716 +1,731 @@
-document.addEventListener('DOMContentLoaded', () => {
+/* ==========================================================================
+   main.js — Saken Seifullin Museum (Collection, Gallery & Visit/Feedback)
+   ========================================================================== */
+(() => {
+  'use strict';
 
-    // ==========================================
-    // 1. EXHIBITS.HTML LOGIC (Exhibit Passport + Magnifier + Related Exhibits)
-    // ==========================================
-    const exhibitsMain = document.getElementById('exhibits-main-content');
-    if (exhibitsMain) {
+  // Вспомогательные селекторы
+  const $ = (selector, root = document) => root.querySelector(selector);
+  const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+  const pad = n => String(n).padStart(2, '0');
+  const fmt = n => `${n.toLocaleString('en-US')} ₸`;
+  const localISO = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
+  const el = (tag, className = '', text = '') => {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text) node.textContent = text;
+    return node;
+  };
+
+  const store = {
+    get(key, fallback) {
+      try { return JSON.parse(localStorage.getItem(`museum:${key}`)) ?? fallback; } catch { return fallback; }
+    },
+    set(key, value) {
+      try { localStorage.setItem(`museum:${key}`, JSON.stringify(value)); } catch { /* ignore */ }
+    }
+  };
+
+  function setActive(buttons, active) {
+    buttons.forEach(btn => {
+      const on = btn === active;
+      btn.classList.toggle('btn-success', on);
+      btn.classList.toggle('btn-outline-success', !on);
+      btn.classList.toggle('active', on);
+    });
+  }
+
+  function check(input, ok, message) {
+    if (!input) return ok;
+    input.classList.toggle('is-invalid', !ok);
+    input.classList.toggle('is-valid', ok && input.value.trim() !== '');
+    const feedback = input.parentElement?.querySelector('.invalid-feedback');
+    if (!ok && feedback && message) feedback.textContent = message;
+    return ok;
+  }
+
+  const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const HOURS = { 0: [10, 17], 1: null, 2: [10, 18], 3: [10, 18], 4: [10, 18], 5: [10, 18], 6: [10, 17] };
+
+  function museumStatus(now = new Date()) {
+    const today = HOURS[now.getDay()];
+    const hour = now.getHours();
+    if (today && hour >= today[0] && hour < today[1]) {
+      return { cls: 'bg-success', text: `🟢 Open now (until ${pad(today[1])}:00)` };
+    }
+    if (today && hour < today[0]) {
+      return { cls: 'bg-warning text-dark', text: `🟡 Closed now (opens at ${pad(today[0])}:00)` };
+    }
+    for (let i = 1; i <= 7; i++) {
+      const day = (now.getDay() + i) % 7;
+      if (HOURS[day]) {
+        const when = i === 1 ? 'tomorrow' : DAYS[day];
+        return { cls: 'bg-danger', text: `🔴 Closed${today ? '' : ' (day off)'}, opens ${when} at ${pad(HOURS[day][0])}:00` };
+      }
+    }
+  }
+
+  /* ==========================================================================
+     1. Глобальный UI (Toast, Scroll, Размер текста)
+     ========================================================================== */
+  function showToast(message) {
+    let toast = $('#custom-toast');
+    if (!toast) {
+      toast = el('div', 'museum-toast');
+      toast.id = 'custom-toast';
+      toast.setAttribute('role', 'status');
+      document.body.append(toast);
+    }
+    toast.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(toast.timer);
+    toast.timer = setTimeout(() => toast.classList.remove('show'), 2800);
+  }
+  window.showToast = showToast;
+
+  function initTextSize() {
+    let size = store.get('font', 100);
+    const apply = () => { document.documentElement.style.fontSize = `${size}%`; };
+    
+    $('#btn-font-decrease')?.addEventListener('click', () => {
+      size = Math.max(87.5, size - 12.5);
+      store.set('font', size);
+      apply();
+      showToast(`Text size: ${Math.round(size)}%`);
+    });
+    $('#btn-font-increase')?.addEventListener('click', () => {
+      size = Math.min(125, size + 12.5);
+      store.set('font', size);
+      apply();
+      showToast(`Text size: ${Math.round(size)}%`);
+    });
+    $('#btn-font-reset')?.addEventListener('click', () => {
+      size = 100;
+      store.set('font', size);
+      apply();
+      showToast('Text size: 100%');
+    });
+    apply();
+  }
+
+  function initScrollUI() {
+    const topBtn = $('#scrollTopBtn');
+    if (!topBtn) return;
+
+    window.addEventListener('scroll', () => {
+      topBtn.classList.toggle('show', window.scrollY > 300);
+    }, { passive: true });
+
+    topBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  /* ==========================================================================
+     2. Страница Коллекции (exhibits.html)
+     ========================================================================== */
+  function initCollection() {
+    const root = $('#exhibits-main-content');
+    if (!root) return;
+
+    const tbody = $('tbody', root);
+    const grid = $('#exhibits-cards-grid');
+    const searchInput = $('#collection-search');
+    const sortSelect = $('#sort-exhibits');
+    const chipButtons = $$('#collection-chips [data-type]');
+    const countDisplay = $('#collection-count');
+    const emptyState = $('#collection-empty');
+    const clearBtn = $('#collection-clear');
+
+    if (!tbody) return;
+
+    const items = $$('tr', tbody).map(row => {
+      const title = row.cells[0]?.textContent.trim() || '';
+      const id = row.dataset.id;
+      const card = $(`#exhibit-card-${id}`);
+      return {
+        id,
+        row,
+        card,
+        title,
+        sortTitle: title.replace(/^[^\p{L}\p{N}]+/u, ''),
+        type: row.cells[1]?.textContent.trim().toLowerCase() || '',
+        year: parseInt(row.cells[2]?.textContent, 10) || 0,
+        text: row.textContent.toLowerCase(),
+        imgSrc: $('img', card)?.getAttribute('src') || '',
+        desc: $('.card-text', card)?.textContent.trim() || ''
+      };
+    });
+
+    const state = { query: '', type: 'all', sort: 'default' };
+
+    const sorters = {
+      default: () => 0,
+      'year-asc': (a, b) => a.year - b.year,
+      'year-desc': (a, b) => b.year - a.year,
+      'title-asc': (a, b) => a.sortTitle.localeCompare(b.sortTitle)
+    };
+
+    function render() {
+      const q = state.query.toLowerCase().trim();
+      let shown = 0;
+
+      [...items].sort(sorters[state.sort]).forEach(item => {
+        const visible = (state.type === 'all' || item.type === state.type) && item.text.includes(q);
+
+        if (tbody && item.row) tbody.append(item.row);
+        if (grid && item.card) grid.append(item.card);
+
+        if (item.row) item.row.hidden = !visible;
+        if (item.card) item.card.hidden = !visible;
+
+        if (visible) shown++;
+      });
+
+      if (countDisplay) {
+        countDisplay.textContent = `Showing ${shown} of ${items.length} exhibits`;
+      }
+      if (emptyState) {
+        emptyState.hidden = shown > 0;
+      }
+    }
+
+    searchInput?.addEventListener('input', e => {
+      state.query = e.target.value;
+      render();
+    });
+
+    sortSelect?.addEventListener('change', e => {
+      state.sort = e.target.value;
+      render();
+    });
+
+    chipButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        setActive(chipButtons, btn);
+        state.type = btn.dataset.type || 'all';
+        render();
+      });
+    });
+
+    clearBtn?.addEventListener('click', () => {
+      state.query = '';
+      state.type = 'all';
+      state.sort = 'default';
+
+      if (searchInput) searchInput.value = '';
+      if (sortSelect) sortSelect.value = 'default';
+
+      if (chipButtons.length) setActive(chipButtons, chipButtons[0]);
+      render();
+    });
+
+    // --- НАПОЛНЕНИЕ ПРЕМИУМ-МОДАЛКИ ПРИ ОТКРЫТИИ ---
+    const modalEl = $('#exhibitModal');
+    if (modalEl) {
+      $$('tbody tr, #exhibits-cards-grid .card', root).forEach(trigger => {
+        trigger.tabIndex = 0;
+        trigger.setAttribute('role', 'button');
+        trigger.dataset.bsToggle = 'modal';
+        trigger.dataset.bsTarget = '#exhibitModal';
+
+        trigger.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            trigger.click();
+          }
+        });
+      });
+
+      modalEl.addEventListener('show.bs.modal', e => {
+        const trigger = e.relatedTarget?.closest('[data-id]') || e.relatedTarget;
+        const id = trigger?.dataset?.id || '1';
+        const card = $(`#exhibit-card-${id}`);
+        if (!card) return;
+
+        const title = $('.card-title', card)?.textContent.trim() || '';
+        const img = $('img', card);
+        const badges = $$('.badge', card);
+        const typeText = badges[0]?.textContent.trim() || 'Artifact';
+        const yearText = badges[1]?.textContent.trim() || 'Historical Era';
+        const desc = $('.card-text', card)?.textContent.trim() || '';
+
+        const modalTitle = $('#exhibitModalLabel');
+        const modalImg = $('#modal-exhibit-img');
+        const modalMeta = $('#modal-exhibit-meta');
+        const modalDesc = $('#modal-exhibit-desc');
+        const modalInv = $('#modal-exhibit-inv');
+
+        if (modalTitle) modalTitle.textContent = title;
+        if (modalImg && img) {
+          modalImg.src = img.getAttribute('src');
+          modalImg.alt = title;
+        }
+        if (modalInv) modalInv.textContent = `INV-1927/0${id}`;
+        if (modalMeta) {
+          modalMeta.innerHTML = `
+            <span class="badge bg-primary fs-6">${typeText}</span>
+            <span class="badge bg-light text-dark border fs-6">${yearText}</span>
+            <span class="badge bg-success-subtle text-success border border-success fs-6">🟢 Original Artifact</span>
+          `;
+        }
+        if (modalDesc) modalDesc.textContent = desc;
+
+        // По умолчанию активируем первую вкладку Overview
+        const firstTab = $('#overview-tab');
+        if (firstTab && window.bootstrap) {
+          bootstrap.Tab.getOrCreateInstance(firstTab).show();
+        }
+      });
+
+      // Обработка кнопок аудио и зума
+      $('#btn-modal-audio')?.addEventListener('click', () => {
+        showToast('🎧 Playing audio guide overview...');
+      });
+      $('#btn-modal-zoom')?.addEventListener('click', () => {
+        showToast('🔍 HD Image preview ready.');
+      });
+    }
+
+    render();
+  }
+
+  /* ==========================================================================
+     3. Страница Галереи (gallery.html)
+     ========================================================================== */
+  const HOTSPOTS = [
+    [
+      { x: 28, y: 62, title: 'Traditional furniture', text: 'Wooden furniture arranged to recreate the atmosphere of the writer\'s era.' },
+      { x: 62, y: 48, title: 'Period interior', text: 'The room is furnished to show how people lived and worked in the early 20th century.' }
+    ],
+    [
+      { x: 30, y: 40, title: 'Clock', text: 'A historical clock preserved in the showcase with other everyday objects.' },
+      { x: 55, y: 62, title: 'Dishes', text: 'Household dishes that belonged to the period and are kept behind glass.' },
+      { x: 78, y: 45, title: 'Personal items', text: 'Rare personal items that help visitors imagine the writer\'s daily life.' }
+    ],
+    [
+      { x: 50, y: 40, title: 'Authentic suit', text: 'A suit reflecting early 20th-century fashion, displayed in a glass showcase.' },
+      { x: 50, y: 80, title: 'Glass showcase', text: 'A protective display that preserves the fabric and stitching.' }
+    ]
+  ];
+
+  const FACTS = [
+    'Saken Seifullin is regarded as one of the founders of modern Kazakh literature.',
+    'Seifullin was a poet, a prose writer and a public figure at the same time.',
+    'His autobiographical novel "Thorny Path" is one of his best-known prose works.',
+    '"Asau Tulpar" ("The Wild Steed") is one of his famous collections of poetry.',
+    'This museum keeps a manuscript of one of his poems dated 1922.',
+    'The collection includes a 1936 petition written by his wife, Gulbakhram Seifullina, in support of her husband.',
+    'After the repressions of the 1930s, Seifullin was rehabilitated posthumously in the 1950s.'
+  ];
+
+  function initGallery() {
+    const galleryRoot = $('#gallery-main-content');
+    if (!galleryRoot) return;
+
+    const factBtn = $('#btn-fact-of-day');
+    const factBox = $('#fact-container');
+    let factIndex = 0;
+
+    if (factBtn && factBox) {
+      factBtn.addEventListener('click', () => {
+        factBox.classList.remove('d-none');
+        factBox.hidden = false;
+        factBox.textContent = '';
         
-        const exhibitsDatabase = [
-            {
-                id: 1,
-                title: '"Aisha" (first edition)',
-                type: 'Book',
-                year: '1927',
-                code: 'INV-1027',
-                img: 'book aisha.jpg',
-                desc: 'A novel by Saken Seifullin, one of the first Kazakh works about the life and social rights of Kazakh women.',
-                importance: 'Key manuscript demonstrating Saken Seifullin\'s advocacy for women\'s equality during early 20th-century cultural reforms.',
-                origin: 'Kazakh State Publishing House Archive',
-                condition: 'Original Hardcover (Preserved)'
-            },
-            {
-                id: 2,
-                title: 'Death Certificate of S. Seifullin’s son, Ayan',
-                type: 'Document',
-                year: '1917',
-                code: 'INV-1917-A',
-                img: '2nd card.png',
-                desc: 'Official archival certificate confirming the tragic death of Saken Seifullin’s son, Ayan.',
-                importance: 'A deeply personal historical record illustrating the personal family tragedies Seifullin endured during turbulent socio-political eras.',
-                origin: 'Seifullin Family Personal Archive',
-                condition: 'Archival Paper Document'
-            },
-            {
-                id: 3,
-                title: 'Letter from the editorial office of “Qazaq Ädebieti”',
-                type: 'Document',
-                year: '1934',
-                code: 'INV-1934-Q',
-                img: '3rd card.jpg',
-                desc: 'Official correspondence from the editorial team regarding Seifullin’s literary manuscripts and union updates.',
-                importance: 'Provides researchers direct evidence of Seifullin’s leadership role in Soviet-era Kazakh literary organizations.',
-                origin: 'Writers’ Union Union Archive',
-                condition: 'Typed Document with Stamp'
-            },
-            {
-                id: 4,
-                title: 'Petition by Gulbakhram Seifullina',
-                type: 'Document',
-                year: '1936',
-                code: 'INV-1936-G',
-                img: '4th card.png',
-                desc: 'Official appeal written by Gulbakhram Seifullina defending her husband’s reputation and civic rights.',
-                importance: 'Crucial primary source reflecting the courage of Saken’s spouse during political repressions in the 1930s.',
-                origin: 'State Historical Archive',
-                condition: 'Handwritten Petition Copy'
-            },
-            {
-                id: 5,
-                title: 'Painting “Saken on the Path to Freedom”',
-                type: 'Painting',
-                year: '1980',
-                code: 'INV-1980-P',
-                img: '5th card.jpg',
-                desc: 'Artistic canvas portraying Saken Seifullin’s revolutionary path and commitment to national enlightenment.',
-                importance: 'Demonstrates how Saken’s legacy continued to inspire Kazakh fine art and visual culture decades later.',
-                origin: 'State Art Gallery Donation',
-                condition: 'Oil on Canvas (Restored)'
-            },
-            {
-                id: 6,
-                title: 'Manuscript of a poem',
-                type: 'Manuscript',
-                year: '1922',
-                code: 'INV-1922-M',
-                img: '6th card.png',
-                desc: 'Authentic handwritten draft of one of Saken Seifullin’s famous lyric poems.',
-                importance: 'Offers rare insights into Seifullin’s creative writing process, handwriting style, and poetic meters.',
-                origin: 'Personal Manuscripts Deposit',
-                condition: 'Ink on Vintage Paper'
-            },
-            {
-                id: 7,
-                title: 'Photograph of Saken Seifullin',
-                type: 'Photograph',
-                year: '1910s',
-                code: 'INV-1910-PH',
-                img: '7th card.png',
-                desc: 'Rare early portrait photograph of young Saken Seifullin during his teaching and early socio-political career.',
-                importance: 'One of the few surviving high-authenticity visual records showing Seifullin in his formative intellectual years.',
-                origin: 'Akmola Regional History Museum',
-                condition: 'Black & White Silver Print'
-            },
-            {
-                id: 8,
-                title: 'Personal document (membership card)',
-                type: 'Document',
-                year: '1929',
-                code: 'INV-1929-MC',
-                img: '8th card.png',
-                desc: 'Official Writers’ Union of the USSR membership credential issued to Saken Seifullin.',
-                importance: 'Formal institutional document proving Seifullin’s status as a pioneer and recognized figure in national literature.',
-                origin: 'Union Central Archive',
-                condition: 'Leatherette Booklet'
-            }
-        ];
+        const strong = document.createElement('strong');
+        strong.textContent = '💡 Fact of the Day: ';
+        factBox.append(strong, document.createTextNode(FACTS[factIndex]));
 
-        const sortSelect = document.getElementById('sort-exhibits');
-        const tableBody = document.querySelector('#exhibits-table tbody');
-
-        if (sortSelect && tableBody) {
-            sortSelect.addEventListener('change', (e) => {
-                const rows = Array.from(tableBody.querySelectorAll('tr'));
-                const option = e.target.value;
-
-                if (option === 'default') return;
-
-                rows.sort((a, b) => {
-                    const titleA = a.children[0].textContent.trim();
-                    const yearA = parseInt(a.children[2].textContent.trim()) || 0;
-
-                    const titleB = b.children[0].textContent.trim();
-                    const yearB = parseInt(b.children[2].textContent.trim()) || 0;
-
-                    if (option === 'year-asc') return yearA - yearB;
-                    if (option === 'year-desc') return yearB - yearA;
-                    if (option === 'title-asc') return titleA.localeCompare(titleB);
-                    return 0;
-                });
-
-                rows.forEach(row => tableBody.appendChild(row));
-            });
-        }
-
-        let currentZoom = 1;
-        const modalImg = document.getElementById('modal-exhibit-img');
-        const btnZoomIn = document.getElementById('btn-zoom-in');
-        const btnZoomOut = document.getElementById('btn-zoom-out');
-        const btnZoomReset = document.getElementById('btn-zoom-reset');
-
-        const applyZoom = (zoomLevel) => {
-            currentZoom = Math.max(1, Math.min(zoomLevel, 2.5));
-            if (modalImg) {
-                modalImg.style.transform = `scale(${currentZoom})`;
-            }
-            if (btnZoomReset) {
-                btnZoomReset.textContent = `${Math.round(currentZoom * 100)}%`;
-            }
-        };
-
-        btnZoomIn?.addEventListener('click', () => applyZoom(currentZoom + 0.3));
-        btnZoomOut?.addEventListener('click', () => applyZoom(currentZoom - 0.3));
-        btnZoomReset?.addEventListener('click', () => applyZoom(1));
-
-        const modalElement = document.getElementById('exhibitModal');
-        if (modalElement && typeof bootstrap !== 'undefined') {
-            const modal = new bootstrap.Modal(modalElement);
-
-            const openExhibitPassport = (exhibitId) => {
-                const data = exhibitsDatabase.find(item => item.id === parseInt(exhibitId));
-                if (!data) return;
-
-                applyZoom(1);
-
-                document.getElementById('modal-exhibit-title').textContent = data.title;
-                document.getElementById('modal-exhibit-type').textContent = data.type;
-                document.getElementById('modal-exhibit-year').textContent = data.year;
-                document.getElementById('modal-exhibit-code').textContent = data.code;
-                document.getElementById('modal-exhibit-desc').textContent = data.desc;
-                document.getElementById('modal-exhibit-importance').textContent = data.importance;
-                document.getElementById('modal-exhibit-origin').textContent = data.origin;
-                document.getElementById('modal-exhibit-condition').textContent = data.condition;
-                document.getElementById('modal-exhibit-img').src = data.img;
-
-                const relatedContainer = document.getElementById('related-exhibits-container');
-                if (relatedContainer) {
-                    relatedContainer.innerHTML = '';
-                    
-                    const relatedItems = exhibitsDatabase
-                        .filter(item => item.id !== data.id)
-                        .slice(0, 3);
-
-                    relatedItems.forEach(rel => {
-                        const col = document.createElement('div');
-                        col.className = 'col-12 col-md-4';
-                        col.innerHTML = `
-                            <div class="card h-100 shadow-sm border p-2 bg-white" style="cursor: pointer;" data-related-id="${rel.id}">
-                              <div class="d-flex align-items-center gap-2">
-                                <img src="${rel.img}" class="rounded object-fit-cover" style="width: 45px; height: 45px;" alt="${rel.title}">
-                                <div class="overflow-hidden">
-                                  <h6 class="card-title text-truncate small fw-bold mb-0 text-success">${rel.title}</h6>
-                                  <small class="text-muted d-block" style="font-size: 0.75rem;">${rel.type} • ${rel.year}</small>
-                                </div>
-                              </div>
-                            </div>
-                        `;
-
-                        col.querySelector('.card').addEventListener('click', (e) => {
-                            const relId = e.currentTarget.getAttribute('data-related-id');
-                            openExhibitPassport(relId);
-                        });
-
-                        relatedContainer.appendChild(col);
-                    });
-                }
-
-                modal.show();
-            };
-
-            document.querySelectorAll('#exhibits-table tbody tr').forEach(row => {
-                row.style.cursor = 'pointer';
-                row.addEventListener('click', () => {
-                    const exhibitId = row.getAttribute('data-id');
-                    openExhibitPassport(exhibitId);
-                });
-            });
-
-            document.querySelectorAll('#exhibits-cards-grid .card').forEach(card => {
-                card.style.cursor = 'pointer';
-                card.addEventListener('click', () => {
-                    const parentCol = card.closest('[data-id]');
-                    if (parentCol) {
-                        const exhibitId = parentCol.getAttribute('data-id');
-                        openExhibitPassport(exhibitId);
-                    }
-                });
-            });
-        }
+        factIndex = (factIndex + 1) % FACTS.length;
+        factBtn.textContent = '💡 Another fact';
+      });
     }
 
-    // ==========================================
-    // 2. FEEDBACK.HTML LOGIC (Smart Calendar + Breakdown + Smart Validation + Booking Preview)
-    // ==========================================
-    const feedbackMain = document.getElementById('feedback-main-content');
-    if (feedbackMain) {
-        const radioIndividual = document.getElementById('type-individual');
-        const radioGroup = document.getElementById('type-group');
-        const calcIndividual = document.getElementById('calculator-individual');
-        const calcGroup = document.getElementById('calculator-group');
-        const orgBlock = document.getElementById('group-org-block');
-
-        const visitDateInput = document.getElementById('visit-date');
-        const visitTimeSelect = document.getElementById('visit-time');
-        const dateValMsg = document.getElementById('date-validation-msg');
-
-        // Минимальная дата в календаре — завтрашний день
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        if (visitDateInput) {
-            visitDateInput.min = tomorrow.toISOString().split('T')[0];
-        }
-
-        // Smart Visit Calendar: Настройка слотов времени в зависимости от дня недели
-        visitDateInput?.addEventListener('change', () => {
-            const selectedDate = new Date(visitDateInput.value);
-            const dayOfWeek = selectedDate.getDay(); // 0 = Вс, 1 = Пн, 6 = Сб
-
-            visitTimeSelect.innerHTML = '<option value="" disabled selected>Select time...</option>';
-
-            if (dayOfWeek === 1) { // Понедельник — ВЫХОДНОЙ
-                visitDateInput.classList.add('is-invalid');
-                if (dateValMsg) dateValMsg.textContent = "Museum is closed on Mondays. Please choose another date.";
-                return;
-            } else {
-                visitDateInput.classList.remove('is-invalid');
-            }
-
-            // Формируем допустимые часы
-            let availableSlots = [];
-            if (dayOfWeek >= 2 && dayOfWeek <= 5) {
-                // Вт - Пт: 10:00 - 18:00
-                availableSlots = ['10:00 AM', '12:00 PM', '02:00 PM', '04:00 PM'];
-            } else {
-                // Сб - Вс: 10:00 - 17:00 (слоты только до 16:00)
-                availableSlots = ['10:00 AM', '12:00 PM', '02:00 PM', '04:00 PM'];
-            }
-
-            availableSlots.forEach(slot => {
-                const opt = document.createElement('option');
-                opt.value = slot;
-                opt.textContent = slot;
-                visitTimeSelect.appendChild(opt);
-            });
-        });
-
-        // Smart Group Booking + Detailed Price Breakdown
-        const calculateTotal = () => {
-            let total = 0;
-            let breakdownItems = [];
-            const isGroupMode = radioGroup && radioGroup.checked;
-
-            // Автоматическое предложение группового тарифа при сумме человек >= 10
-            const qtyAdult = parseInt(document.getElementById('qty-adult')?.value) || 0;
-            const qtyStudent = parseInt(document.getElementById('qty-student')?.value) || 0;
-            const qtySenior = parseInt(document.getElementById('qty-senior')?.value) || 0;
-            const totalIndividualCount = qtyAdult + qtyStudent + qtySenior;
-
-            if (!isGroupMode && totalIndividualCount >= 10) {
-                radioGroup.checked = true;
-                toggleVisitType();
-                return calculateTotal();
-            }
-
-            if (isGroupMode) {
-                const groupCount = parseInt(document.getElementById('qty-group-people')?.value) || 10;
-                const groupSubtotal = groupCount * 600;
-                total += groupSubtotal;
-                breakdownItems.push(`Group Tickets (${groupCount} visitors @ 600 ₸) = <strong>${groupSubtotal.toLocaleString()} ₸</strong> <span class="badge bg-success ms-1">40% OFF</span>`);
-            } else {
-                if (qtyAdult > 0) {
-                    const price = qtyAdult * 1000;
-                    total += price;
-                    breakdownItems.push(`Adult Tickets (${qtyAdult} × 1,000 ₸) = ${price.toLocaleString()} ₸`);
-                }
-                if (qtyStudent > 0) {
-                    const price = qtyStudent * 500;
-                    total += price;
-                    breakdownItems.push(`Student Tickets (${qtyStudent} × 500 ₸) = ${price.toLocaleString()} ₸`);
-                }
-                if (qtySenior > 0) {
-                    const price = qtySenior * 300;
-                    total += price;
-                    breakdownItems.push(`Child/Senior Tickets (${qtySenior} × 300 ₸) = ${price.toLocaleString()} ₸`);
-                }
-            }
-
-            // Дополнительные услуги
-            const addGuide = document.getElementById('add-guide');
-            const addPhoto = document.getElementById('add-photo');
-
-            if (addGuide && addGuide.checked) {
-                const val = parseInt(addGuide.value);
-                total += val;
-                breakdownItems.push(`Personal Tour Guide = +${val.toLocaleString()} ₸`);
-            }
-            if (addPhoto && addPhoto.checked) {
-                const val = parseInt(addPhoto.value);
-                total += val;
-                breakdownItems.push(`Photo Pass = +${val.toLocaleString()} ₸`);
-            }
-
-            // Отображение детализации
-            const breakdownEl = document.getElementById('price-breakdown-list');
-            if (breakdownEl) {
-                breakdownEl.innerHTML = breakdownItems.length > 0 
-                    ? breakdownItems.map(item => `<div class="d-flex justify-content-between mb-1"><span>${item.split('=')[0]}</span><span>${item.split('=')[1]}</span></div>`).join('')
-                    : '<span class="text-muted">No tickets selected</span>';
-            }
-
-            const displayEl = document.getElementById('total-price-display');
-            if (displayEl) {
-                displayEl.textContent = `${total.toLocaleString()} ₸`;
-            }
-            return { total, isGroupMode, breakdownItems };
-        };
-
-        const toggleVisitType = () => {
-            if (radioGroup && radioGroup.checked) {
-                calcIndividual?.classList.add('d-none');
-                calcGroup?.classList.remove('d-none');
-                orgBlock?.classList.remove('d-none');
-            } else {
-                calcIndividual?.classList.remove('d-none');
-                calcGroup?.classList.add('d-none');
-                orgBlock?.classList.add('d-none');
-            }
-            calculateTotal();
-        };
-
-        radioIndividual?.addEventListener('change', toggleVisitType);
-        radioGroup?.addEventListener('change', toggleVisitType);
-
-        calculateTotal();
-
-        document.querySelectorAll('.ticket-qty, .extra-service, #qty-group-people').forEach(element => {
-            element.addEventListener('input', calculateTotal);
-            element.addEventListener('change', calculateTotal);
-        });
-
-        // Booking Preview Modal
-        const excursionForm = document.getElementById('excursion-form');
-        const previewModalEl = document.getElementById('bookingPreviewModal');
-
-        if (excursionForm && previewModalEl && typeof bootstrap !== 'undefined') {
-            const previewModal = new bootstrap.Modal(previewModalEl);
-
-            excursionForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                
-                // Smart Form Validation
-                let isValid = true;
-                const nameInput = document.getElementById('visitor-name');
-                const emailInput = document.getElementById('visitor-email');
-
-                if (!nameInput.value.trim()) {
-                    nameInput.classList.add('is-invalid');
-                    isValid = false;
-                } else nameInput.classList.remove('is-invalid');
-
-                if (!emailInput.value.trim() || !emailInput.value.includes('@')) {
-                    emailInput.classList.add('is-invalid');
-                    isValid = false;
-                } else emailInput.classList.remove('is-invalid');
-
-                if (!visitDateInput.value || visitDateInput.classList.contains('is-invalid')) {
-                    visitDateInput.classList.add('is-invalid');
-                    isValid = false;
-                } else visitDateInput.classList.remove('is-invalid');
-
-                if (!visitTimeSelect.value) {
-                    visitTimeSelect.classList.add('is-invalid');
-                    isValid = false;
-                } else visitTimeSelect.classList.remove('is-invalid');
-
-                if (!isValid) return;
-
-                // Заполняем модальное окно предпросмотра
-                const { total, isGroupMode, breakdownItems } = calculateTotal();
-                
-                document.getElementById('prev-name').textContent = nameInput.value;
-                document.getElementById('prev-email').textContent = emailInput.value;
-                document.getElementById('prev-datetime').textContent = `${visitDateInput.value} at ${visitTimeSelect.value}`;
-                document.getElementById('prev-type').textContent = isGroupMode ? 'Group Visit (10+)' : 'Individual Visit';
-                document.getElementById('prev-total').textContent = `${total.toLocaleString()} ₸`;
-
-                const prevBreakdownEl = document.getElementById('prev-breakdown');
-                if (prevBreakdownEl) {
-                    prevBreakdownEl.innerHTML = breakdownItems.map(item => `<div class="d-flex justify-content-between mb-1"><span>${item.split('=')[0]}</span><span>${item.split('=')[1]}</span></div>`).join('');
-                }
-
-                previewModal.show();
-            });
-
-            // Кнопка подлинной симуляции отправки заявки
-            document.getElementById('btn-confirm-demo-submit')?.addEventListener('click', () => {
-                previewModal.hide();
-                alert('✓ Demo Request Submitted! (In real application, this data is sent to museum backend).');
-                excursionForm.reset();
-                setTimeout(toggleVisitType, 50);
-            });
-        }
-
-        // Review Categories + Feedback Logic
-        const catButtons = document.querySelectorAll('#review-categories button');
-        let selectedCategory = 'Exhibits';
-
-        catButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                catButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                selectedCategory = btn.getAttribute('data-cat');
-            });
-        });
-
-        const stars = document.querySelectorAll('#rating-container span');
-        let selectedRating = 5;
-
-        stars.forEach((star, index) => {
-            star.addEventListener('click', () => {
-                selectedRating = index + 1;
-                stars.forEach((s, idx) => {
-                    s.style.opacity = idx < selectedRating ? '1' : '0.3';
-                });
-            });
-        });
-
-        const feedbackText = document.getElementById('feedback-text');
-        const charCounter = document.getElementById('char-counter');
-
-        if (feedbackText && charCounter) {
-            feedbackText.addEventListener('input', () => {
-                const len = feedbackText.value.length;
-                charCounter.textContent = `${len} / 500`;
-            });
-        }
-
-        const feedbackForm = document.getElementById('feedback-form');
-        const feedbackResponse = document.getElementById('feedback-response-area');
-
-        if (feedbackForm) {
-            feedbackForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                if (!feedbackText.value.trim()) {
-                    feedbackText.classList.add('is-invalid');
-                    return;
-                } else {
-                    feedbackText.classList.remove('is-invalid');
-                }
-
-                feedbackResponse.className = 'mt-3 p-3 rounded alert alert-info d-block';
-                feedbackResponse.innerHTML = `Thank you for reviewing <strong>${selectedCategory}</strong> with <strong>${selectedRating} stars</strong>!`;
-
-                feedbackForm.reset();
-                if (charCounter) charCounter.textContent = '0 / 500';
-                stars.forEach(s => s.style.opacity = '1');
-            });
-        }
+    const carousel = $('#museumCarousel');
+    if (carousel) {
+      carousel.addEventListener('slid.bs.carousel', e => {
+        const counter = $('#photo-counter');
+        if (counter) counter.textContent = `Photo ${e.to + 1} of 3`;
+      });
     }
 
-    // ==========================================
-    // 3. GALLERY.HTML LOGIC
-    // ==========================================
-    const galleryMain = document.getElementById('gallery-main-content');
-    if (galleryMain) {
-        const galleryDatabase = [
-            {
-                title: "Museum Inner View",
-                tag: "Interior",
-                img: "Museum inner view.jpeg",
-                desc: "Traditional wooden hall architecture recreating the literary atmosphere of early 20th-century Kazakh intelligentsia.",
-                hotspots: [
-                    { x: "32%", y: "45%", name: "Wooden Showcase", text: "Original late 19th-century glass showcase containing archival documents and books." },
-                    { x: "68%", y: "52%", name: "Memorial Stand", text: "Exhibition stand highlighting Seifullin's pedagogical career in Akmola." }
-                ]
-            },
-            {
-                title: "Personal Belongings Showcase",
-                tag: "Personal Items",
-                img: "Personal belongings.jpg",
-                desc: "Authentic personal objects used by Saken Seifullin during his creative and public service years.",
-                hotspots: [
-                    { x: "53%", y: "48%", name: "Personal Clock", text: "Mechanical desk clock preserved in functioning condition from Seifullin's study room." },
-                    { x: "78%", y: "65%", name: "White Porcelain Glass", text: "Porcelain tea glass gifted to Saken by fellow writers." }
-                ]
-            },
-            {
-                title: "Authentic Suit",
-                tag: "Attire",
-                img: "Saken s suit.png",
-                desc: "Preserved two-piece suit reflecting early 20th-century urban Kazakh intelligentsia fashion.",
-                hotspots: [
-                    { x: "50%", y: "30%", name: "Suit Jacket", text: "Authentic wool jacket reflecting classic European-Kazakh formal tailoring." },
-                    { x: "25%", y: "60%", name: "Wooden Walking Cane", text: "Handcrafted wooden cane carried by Seifullin during municipal assemblies." }
-                ]
-            }
-        ];
+    const modalEl = $('#lightboxModal');
+    if (!modalEl) return;
 
-        const themeBtn = document.getElementById('btn-toggle-theme');
-        let isDarkMode = false;
+    const cards = $$('.gallery-card-col');
+    const photos = cards.map(card => ({
+      src: $('img', card)?.getAttribute('src') || '',
+      title: $('.card-title', card)?.textContent.trim() || '',
+      desc: $('.card-text', card)?.textContent.trim() || '',
+      tag: $('.badge', card)?.textContent.trim() || 'Interior'
+    }));
 
-        if (themeBtn) {
-            themeBtn.addEventListener('click', () => {
-                isDarkMode = !isDarkMode;
-                const controls = document.getElementById('gallery-controls');
-                const cards = document.querySelectorAll('.gallery-card');
+    const wrap = $('#lightbox-img-wrapper');
+    const img = $('#lightbox-img');
+    const spots = $('#hotspots-container');
+    const focusTitle = $('#hotspot-focus-title');
+    const focusDesc = $('#hotspot-focus-desc');
+    const defaults = { 
+      title: focusTitle?.textContent || '📍 Interactive Hotspots', 
+      desc: focusDesc?.textContent.trim() || 'Hover or click on any pulsing gold marker on the photograph to inspect highlighted artifacts.' 
+    };
 
-                if (isDarkMode) {
-                    document.body.style.backgroundColor = '#121212';
-                    document.body.style.color = '#e0e0e0';
-                    controls?.classList.replace('bg-light', 'bg-dark');
-                    controls?.classList.add('border-secondary');
-                    themeBtn.textContent = '☀️ Light Mode';
-                    themeBtn.classList.replace('btn-outline-dark', 'btn-outline-light');
+    const found = photos.map(() => new Set());
+    let index = 0;
+    let zoom = 1;
+    let pan = { x: 0, y: 0 };
 
-                    cards.forEach(c => c.classList.add('bg-dark', 'text-white', 'border-secondary'));
-                } else {
-                    document.body.style.backgroundColor = '';
-                    document.body.style.color = '';
-                    controls?.classList.replace('bg-dark', 'bg-light');
-                    controls?.classList.remove('border-secondary');
-                    themeBtn.textContent = '🌙 Dark Mode';
-                    themeBtn.classList.replace('btn-outline-light', 'btn-outline-dark');
-
-                    cards.forEach(c => c.classList.remove('bg-dark', 'text-white', 'border-secondary'));
-                }
-            });
-        }
-
-        let currentFontSize = 100;
-        const fontInc = document.getElementById('btn-font-increase');
-        const fontDec = document.getElementById('btn-font-decrease');
-        const fontReset = document.getElementById('btn-font-reset');
-
-        fontInc?.addEventListener('click', () => {
-            if (currentFontSize < 130) {
-                currentFontSize += 10;
-                galleryMain.style.fontSize = `${currentFontSize}%`;
-            }
-        });
-
-        fontDec?.addEventListener('click', () => {
-            if (currentFontSize > 80) {
-                currentFontSize -= 10;
-                galleryMain.style.fontSize = `${currentFontSize}%`;
-            }
-        });
-
-        fontReset?.addEventListener('click', () => {
-            currentFontSize = 100;
-            galleryMain.style.fontSize = '100%';
-        });
-
-        const factBtn = document.getElementById('btn-fact-of-day');
-        const factContainer = document.getElementById('fact-container');
-        const facts = [
-            "Saken Seifullin was one of the pioneers of modern Kazakh literature.",
-            "The museum building was constructed in the late 19th century and is an architectural heritage site.",
-            "The museum holds over 5,000 unique personal documents, original manuscripts, and historical photographs."
-        ];
-
-        if (factBtn && factContainer) {
-            factBtn.addEventListener('click', () => {
-                if (factContainer.classList.contains('d-none')) {
-                    const randomFact = facts[Math.floor(Math.random() * facts.length)];
-                    factContainer.textContent = `💡 Fact: ${randomFact}`;
-                    factContainer.classList.remove('d-none');
-                } else {
-                    factContainer.classList.add('d-none');
-                }
-            });
-        }
-
-        const carouselEl = document.getElementById('museumCarousel');
-        const photoCounter = document.getElementById('photo-counter');
-
-        if (carouselEl && photoCounter) {
-            carouselEl.addEventListener('slide.bs.carousel', (event) => {
-                const slideIndex = event.to + 1;
-                const totalSlides = carouselEl.querySelectorAll('.carousel-item').length;
-                photoCounter.textContent = `Photo ${slideIndex} of ${totalSlides}`;
-            });
-        }
-
-        const lightboxModalEl = document.getElementById('lightboxModal');
-        if (lightboxModalEl && typeof bootstrap !== 'undefined') {
-            const lightboxModal = new bootstrap.Modal(lightboxModalEl);
-            let currentIndex = 0;
-            let galleryZoom = 1;
-
-            const wrapperEl = document.getElementById('lightbox-img-wrapper');
-            const imgEl = document.getElementById('lightbox-img');
-            const hotspotsContainer = document.getElementById('hotspots-container');
-
-            const titleEl = document.getElementById('lightbox-card-title');
-            const tagEl = document.getElementById('lightbox-tag');
-            const descEl = document.getElementById('lightbox-desc');
-            const focusTitleEl = document.getElementById('hotspot-focus-title');
-            const focusDescEl = document.getElementById('hotspot-focus-desc');
-
-            const applyGalleryZoom = (zoomLevel) => {
-                galleryZoom = Math.max(1, Math.min(zoomLevel, 2.2));
-                if (wrapperEl) {
-                    wrapperEl.style.transform = `scale(${galleryZoom})`;
-                }
-                const btnReset = document.getElementById('btn-gallery-zoom-reset');
-                if (btnReset) {
-                    btnReset.textContent = `${Math.round(galleryZoom * 100)}%`;
-                }
-            };
-
-            document.getElementById('btn-gallery-zoom-in')?.addEventListener('click', () => applyGalleryZoom(galleryZoom + 0.3));
-            document.getElementById('btn-gallery-zoom-out')?.addEventListener('click', () => applyGalleryZoom(galleryZoom - 0.3));
-            document.getElementById('btn-gallery-zoom-reset')?.addEventListener('click', () => applyGalleryZoom(1));
-
-            const updateLightboxContent = (index) => {
-                currentIndex = index;
-                const data = galleryDatabase[currentIndex];
-                if (!data) return;
-
-                applyGalleryZoom(1);
-
-                if (titleEl) titleEl.textContent = data.title;
-                if (tagEl) tagEl.textContent = data.tag;
-                if (descEl) descEl.textContent = data.desc;
-                if (imgEl) imgEl.src = data.img;
-
-                if (focusTitleEl) focusTitleEl.textContent = "📍 Interactive Hotspots";
-                if (focusDescEl) focusDescEl.textContent = "Hover or click on any pulsing gold marker on the photograph to inspect highlighted artifacts.";
-
-                if (hotspotsContainer) {
-                    hotspotsContainer.innerHTML = '';
-                    
-                    data.hotspots.forEach((hs) => {
-                        const spot = document.createElement('div');
-                        spot.className = 'hotspot';
-                        spot.style.left = hs.x;
-                        spot.style.top = hs.y;
-                        spot.title = hs.name;
-
-                        spot.addEventListener('mouseenter', () => {
-                            if (focusTitleEl) focusTitleEl.textContent = `🔎 ${hs.name}`;
-                            if (focusDescEl) focusDescEl.textContent = hs.text;
-                        });
-
-                        spot.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            if (focusTitleEl) focusTitleEl.textContent = `🔎 ${hs.name}`;
-                            if (focusDescEl) focusDescEl.textContent = hs.text;
-                        });
-
-                        hotspotsContainer.appendChild(spot);
-                    });
-                }
-            };
-
-            document.querySelectorAll('#gallery-cards-grid .gallery-card-col').forEach((col) => {
-                const idx = parseInt(col.getAttribute('data-index')) || 0;
-                col.addEventListener('click', () => {
-                    updateLightboxContent(idx);
-                    lightboxModal.show();
-                });
-            });
-
-            document.getElementById('btn-lightbox-prev')?.addEventListener('click', () => {
-                const nextIdx = (currentIndex - 1 + galleryDatabase.length) % galleryDatabase.length;
-                updateLightboxContent(nextIdx);
-            });
-
-            document.getElementById('btn-lightbox-next')?.addEventListener('click', () => {
-                const nextIdx = (currentIndex + 1) % galleryDatabase.length;
-                updateLightboxContent(nextIdx);
-            });
-        }
+    function renderZoom() {
+      if (!wrap) return;
+      const limitX = (wrap.offsetWidth * (zoom - 1)) / 2;
+      const limitY = (wrap.offsetHeight * (zoom - 1)) / 2;
+      pan.x = Math.max(-limitX, Math.min(limitX, pan.x));
+      pan.y = Math.max(-limitY, Math.min(limitY, pan.y));
+      wrap.style.transform = `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`;
+      wrap.classList.toggle('zoomed', zoom > 1);
+      const zoomResetBtn = $('#btn-gallery-zoom-reset');
+      if (zoomResetBtn) zoomResetBtn.textContent = `${Math.round(zoom * 100)}%`;
     }
-});
+
+    function setZoom(value) {
+      zoom = Math.min(3, Math.max(1, value));
+      if (zoom === 1) pan = { x: 0, y: 0 };
+      renderZoom();
+    }
+
+    function inspect(hotspot, n, button) {
+      if (spots) $$('.hotspot', spots).forEach(b => b.classList.toggle('active', b === button));
+      const isNew = !found[index].has(n);
+      found[index].add(n);
+      const total = (HOTSPOTS[index] || []).length;
+      if (focusTitle) focusTitle.textContent = `📍 ${hotspot.title}`;
+      if (focusDesc) focusDesc.textContent = `${hotspot.text} (${found[index].size}/${total} details found)`;
+      if (isNew && found[index].size === total) showToast('🔎 You found every detail in this photo!');
+    }
+
+    function show(i) {
+      index = (i + photos.length) % photos.length;
+      const photo = photos[index] || photos[0];
+      if (img) {
+        img.src = photo.src;
+        img.alt = photo.title;
+      }
+      
+      const cardTitle = $('#lightbox-card-title');
+      const descEl = $('#lightbox-desc');
+      const tagEl = $('#lightbox-tag');
+
+      if (cardTitle) cardTitle.textContent = photo.title;
+      if (descEl) descEl.textContent = photo.desc;
+      if (tagEl) tagEl.textContent = photo.tag;
+      if (focusTitle) focusTitle.textContent = defaults.title;
+      if (focusDesc) focusDesc.textContent = defaults.desc;
+      setZoom(1);
+
+      if (spots) {
+        spots.replaceChildren(...(HOTSPOTS[index] || []).map((hotspot, n) => {
+          const button = el('button', 'hotspot');
+          button.type = 'button';
+          button.style.left = `${hotspot.x}%`;
+          button.style.top = `${hotspot.y}%`;
+          button.setAttribute('aria-label', hotspot.title);
+          ['mouseenter', 'focus', 'click'].forEach(type => button.addEventListener(type, () => inspect(hotspot, n, button)));
+          return button;
+        }));
+      }
+    }
+
+    const openModal = i => {
+      show(i);
+      if (window.bootstrap && bootstrap.Modal) {
+        bootstrap.Modal.getOrCreateInstance(modalEl).show();
+      }
+    };
+
+    $$('#museumCarousel .carousel-item').forEach((slide, idx) => {
+      slide.style.cursor = 'pointer';
+      slide.addEventListener('click', () => openModal(idx));
+    });
+
+    cards.forEach((card, idx) => {
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', () => openModal(idx));
+    });
+
+    $('#btn-lightbox-prev')?.addEventListener('click', () => show(index - 1));
+    $('#btn-lightbox-next')?.addEventListener('click', () => show(index + 1));
+    $('#btn-gallery-zoom-in')?.addEventListener('click', () => setZoom(zoom + 0.5));
+    $('#btn-gallery-zoom-out')?.addEventListener('click', () => setZoom(zoom - 0.5));
+    $('#btn-gallery-zoom-reset')?.addEventListener('click', () => setZoom(1));
+    modalEl.addEventListener('hidden.bs.modal', () => setZoom(1));
+  }
+
+  /* ==========================================================================
+     4. Страница Посещения и Отзывов (feedback.html)
+     ========================================================================== */
+  function initVisit() {
+    const form = $('#excursion-form');
+    if (!form) return;
+
+    const PRICES = { adult: 1000, student: 500, senior: 300, group: 600 };
+    const NAME_RE = /^\p{L}[\p{L}'’.-]*(\s+\p{L}[\p{L}'’.-]*)+$/u;
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+    const isGroup = () => $('#type-group')?.checked || false;
+    const qty = selector => Math.max(0, parseInt($(selector)?.value, 10) || 0);
+    const dateInput = $('#visit-date');
+    const timeSelect = $('#visit-time');
+    if (dateInput) dateInput.min = localISO(new Date());
+
+    function syncVisitType() {
+      $('#calculator-individual')?.classList.toggle('d-none', isGroup());
+      $('#calculator-group')?.classList.toggle('d-none', !isGroup());
+      $('#group-org-block')?.classList.toggle('d-none', !isGroup());
+    }
+
+    function fillSlots() {
+      if (!dateInput || !timeSelect) return;
+      const value = dateInput.value;
+      const hours = value ? HOURS[new Date(`${value}T00:00`).getDay()] : undefined;
+      const now = new Date();
+      const slots = [];
+      if (hours) {
+        for (let h = hours[0]; h < hours[1]; h++) {
+          if (value === localISO(now) && h <= now.getHours()) continue;
+          slots.push(new Option(`${pad(h)}:00 – ${pad(h + 1)}:00`, `${pad(h)}:00`));
+        }
+      }
+      const placeholder = !value ? 'Select date first...' : !hours ? 'Museum is closed this day' : slots.length ? 'Select a time slot...' : 'No slots left today';
+      timeSelect.replaceChildren(new Option(placeholder, '', true, true), ...slots);
+      timeSelect.options[0].disabled = true;
+      timeSelect.classList.remove('is-valid', 'is-invalid');
+    }
+
+    function getOrder() {
+      const lines = [];
+      let people = 0;
+      let saved = 0;
+      if (isGroup()) {
+        people = qty('#qty-group-people');
+        lines.push([`Group tariff × ${people}`, people * PRICES.group]);
+        saved = people * (PRICES.adult - PRICES.group);
+      } else {
+        [['adult', 'Adult'], ['student', 'Student'], ['senior', 'Child / Senior']].forEach(([key, label]) => {
+          const n = qty(`#qty-${key}`);
+          people += n;
+          if (n) lines.push([`${label} × ${n}`, n * PRICES[key]]);
+        });
+      }
+      $$('.extra-service:checked').forEach(box => {
+        lines.push([box.nextElementSibling.textContent.replace(/\s*\(.*\)/, ''), Number(box.value)]);
+      });
+      return { lines, people, saved, total: lines.reduce((sum, line) => sum + line[1], 0) };
+    }
+
+    function renderReceipt(box, order) {
+      if (!box) return;
+      const rows = order.lines.map(([label, sum]) => {
+        const row = el('div', 'receipt-row');
+        row.append(el('span', '', label), el('span', '', fmt(sum)));
+        return row;
+      });
+      box.replaceChildren(...rows);
+      if (!order.people) box.append(el('div', 'text-danger', 'Add at least one ticket to continue.'));
+      if (order.saved) box.append(el('div', 'receipt-saved', `You save ${fmt(order.saved)} compared with adult tickets.`));
+    }
+
+    function renderOrder() {
+      const order = getOrder();
+      renderReceipt($('#price-breakdown-list'), order);
+      const totalDisplay = $('#total-price-display');
+      if (totalDisplay) totalDisplay.textContent = fmt(order.total);
+      return order;
+    }
+
+    const rules = {
+      'visitor-name': v => NAME_RE.test(v.trim()) || 'Please enter your first and last name.',
+      'visitor-email': v => EMAIL_RE.test(v.trim()) || 'Please provide a valid email, e.g. name@example.com.',
+      'org-name': v => !isGroup() || v.trim().length >= 2 || 'Please enter the name of your organization.',
+      'qty-group-people': v => !isGroup() || parseInt(v, 10) >= 10 || 'The large group tariff starts from 10 people.',
+      'visit-time': v => Boolean(v) || 'Please select a time slot.',
+      'visit-date': v => {
+        if (!v) return 'Please choose a date.';
+        if (v < dateInput.min) return 'The date cannot be in the past.';
+        return HOURS[new Date(`${v}T00:00`).getDay()] ? true : 'The museum is closed on Mondays. Please choose Tue–Sun.';
+      }
+    };
+
+    const validate = input => {
+      if (!input || !rules[input.id]) return true;
+      const result = rules[input.id](input.value);
+      return check(input, result === true, result);
+    };
+
+    form.addEventListener('input', e => {
+      const target = e.target;
+      if (target.name === 'visitType') syncVisitType();
+      if (target === dateInput) { fillSlots(); validate(dateInput); }
+      else if (rules[target.id] && (target.classList.contains('is-valid') || target.classList.contains('is-invalid'))) validate(target);
+      renderOrder();
+    });
+
+    form.addEventListener('change', e => {
+      if (e.target === timeSelect || e.target === dateInput) validate(e.target);
+    });
+
+    form.addEventListener('reset', () => setTimeout(() => {
+      $$('.is-valid, .is-invalid', form).forEach(node => node.classList.remove('is-valid', 'is-invalid'));
+      syncVisitType();
+      fillSlots();
+      renderOrder();
+    }, 0));
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const ids = ['visitor-name', 'visitor-email', 'visit-date', 'visit-time'];
+      if (isGroup()) ids.push('org-name', 'qty-group-people');
+      const invalid = ids.map(id => $(`#${id}`)).filter(input => !validate(input));
+      const order = renderOrder();
+
+      if (invalid.length) {
+        invalid[0].focus();
+        showToast('Please fix the highlighted fields.');
+        return;
+      }
+      if (!order.people) {
+        $('#qty-adult')?.focus();
+        showToast('Please add at least one ticket.');
+        return;
+      }
+
+      const modalEl = $('#bookingPreviewModal');
+      if (modalEl && window.bootstrap) {
+        const prettyDate = new Date(`${dateInput.value}T00:00`).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        $('#prev-name').textContent = $('#visitor-name')?.value.trim() || '';
+        $('#prev-email').textContent = $('#visitor-email')?.value.trim() || '';
+        $('#prev-datetime').textContent = `${prettyDate}, ${timeSelect.selectedOptions[0]?.text || ''}`;
+        $('#prev-type').textContent = isGroup() ? `Large group, ${$('#org-name')?.value.trim() || ''}` : 'Individual / small group';
+        renderReceipt($('#prev-breakdown'), order);
+        $('#prev-total').textContent = fmt(order.total);
+        bootstrap.Modal.getOrCreateInstance(modalEl).show();
+      }
+    });
+
+    $('#btn-confirm-demo-submit')?.addEventListener('click', () => {
+      const modalEl = $('#bookingPreviewModal');
+      if (modalEl && window.bootstrap) {
+        bootstrap.Modal.getInstance(modalEl)?.hide();
+      }
+      form.reset();
+      showToast('✅ Excursion request successfully submitted!');
+    });
+
+    syncVisitType();
+    fillSlots();
+    renderOrder();
+  }
+
+  function initReview() {
+    const form = $('#feedback-form');
+    if (!form) return;
+
+    const stars = $$('#rating-container span');
+    const text = $('#feedback-text');
+    const counter = $('#char-counter');
+    const labels = ['Poor', 'Fair', 'Good', 'Very good', 'Excellent'];
+    const categories = $$('#review-categories button');
+    let rating = 0;
+    let category = $('#review-categories .active')?.dataset.cat || 'Exhibits';
+
+    const paint = n => {
+      stars.forEach((star, i) => {
+        star.classList.toggle('on', i < n);
+        star.classList.toggle('off', i >= n);
+      });
+      const lbl = $('#rating-label');
+      if (lbl) lbl.textContent = n ? `${n}/5 — ${labels[n - 1]}` : 'Click a star to rate';
+    };
+
+    stars.forEach((star, i) => {
+      star.tabIndex = 0;
+      star.setAttribute('role', 'button');
+      star.addEventListener('mouseenter', () => paint(i + 1));
+      star.addEventListener('click', () => {
+        rating = i + 1;
+        const err = $('#rating-error');
+        if (err) err.textContent = '';
+        paint(rating);
+      });
+    });
+
+    $('#rating-container')?.addEventListener('mouseleave', () => paint(rating));
+    paint(0);
+
+    categories.forEach(btn => btn.addEventListener('click', () => {
+      category = btn.dataset.cat;
+      setActive(categories, btn);
+    }));
+
+    text?.addEventListener('input', () => {
+      if (counter && text) {
+        counter.textContent = `${text.value.length} / ${text.maxLength}`;
+      }
+    });
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const val = text ? text.value.trim() : '';
+
+      if (!rating) {
+        const err = $('#rating-error');
+        if (err) err.textContent = 'Please choose a rating from 1 to 5 stars.';
+        return;
+      }
+      if (val.length < 10) {
+        text?.classList.add('is-invalid');
+        return;
+      }
+
+      text?.classList.remove('is-invalid');
+      const area = $('#feedback-response-area');
+      if (area) {
+        area.className = 'mt-3 p-3 rounded alert alert-success';
+        area.textContent = `🙏 Thank you! Your ${rating}/5 review about "${category}" was submitted.`;
+      }
+
+      form.reset();
+      rating = 0;
+      paint(0);
+      if (counter && text) counter.textContent = `0 / ${text.maxLength}`;
+    });
+  }
+
+  function initContacts() {
+    const badge = $('#museum-status-badge');
+    if (badge) {
+      const status = museumStatus();
+      badge.className = `badge ${status.cls} px-3 py-2 fs-6`;
+      badge.textContent = status.text;
+    }
+  }
+
+  /* ==========================================================================
+     Запуск всех модулей
+     ========================================================================== */
+  function init() {
+    initTextSize();
+    initScrollUI();
+    initCollection();
+    initGallery();
+    initVisit();
+    initReview();
+    initContacts();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
